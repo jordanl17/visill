@@ -117,3 +117,29 @@ One commit per export, plus skeleton and lock. Order:
 - Should `readyDOM` support being called multiple times? Lean: yes, each call is independent; no internal queue.
 - Should `delegate`'s handler receive `(event, target)` or `(event)` with `event.currentTarget` reassigned? Lean: pass `target` as a second arg and leave `event.currentTarget` untouched, matching browser behaviour for delegated listeners.
 - Confirm `visill` is free on npm before Phase 2 lands its first publish (Phase 5). The fallback name `@visill/sdk` would require only a small `package.json` change, with no source impact.
+
+## 12. Delivery
+
+Shipped 2026-05-27. Direct push to `main` at `jordanl17/visill`. Commit `d6987de`. CI run `26485068643` green in 18s.
+
+All five open questions resolved at implementation time per the listed leans. Four locked into ADR 0009; the npm-name check stays as a Phase 5 gate.
+
+Package contents at delivery:
+- Seven source files under `packages/visill/src/`: `host.ts`, `ready-dom.ts`, `require-element.ts`, `own-descendant.ts`, `delegate.ts`, `data-island.ts`, `prompt.ts`.
+- Seven matching `*.test.ts` files plus `public-api.test.ts` snapshot lock. 23 tests, all green under JSDOM via Vitest 2.1.9.
+- `src/index.ts` re-exports the seven names in design-sketch order.
+- `tsconfig.build.json` excludes `*.test.ts` so the tarball ships only runtime files.
+- `tsconfig.node.json` covers `vitest.config.ts` for the LSP.
+
+ADR 0009 landed in the same commit with status `Accepted`. ADR index row flipped.
+
+Tarball spot check (`pnpm pack` from `packages/visill/`): ships `package.json`, `LICENSE`, and 32 files under `dist/` (eight `.js` plus their `.js.map`, `.d.ts`, `.d.ts.map` siblings). No `src/`, no test files, no config. Raw size of the eight runtime `.js` files: 2,197 bytes.
+
+## 13. Lessons learned
+
+- **Sub-agent prettier drift.** Eight Wave-1 sub-agents authored TypeScript in mixed styles (mostly double quotes plus stray semicolons). The workspace `.prettierrc` mandates the opposite. The final review caught it; the coordinator ran `prettier --write` to fix; the reformat then broke the `.d.ts` snapshot test because the snapshot pinned the unformatted form. Codified the fix in CLAUDE.md and the playbook: every sub-agent brief that authors TS/JS/JSON repeats the prettier rules verbatim, and the coordinator runs `prettier --write` between each wave and its review-diff gate. Snapshots and downstream prompts now read the formatted form by construction.
+- **Tarball test bleed.** Default `tsc` compiled `*.test.ts` files into `dist/`, and `files: ["dist"]` shipped them. Split into `tsconfig.json` (covers tests for typecheck and IDE) and `tsconfig.build.json` (excludes tests for emit). `build` and `pretest` scripts point at the build config; `typecheck` stays on the root.
+- **`pnpm pack` rejects `--filter`.** `pnpm --filter <pkg> pack` injects `--recursive`, which `pack` refuses. Use `cd packages/<pkg> && pnpm pack` instead. Worth a script alias when the publish flow lands in Phase 7.
+- **ADR over-specified the host ambient.** Draft ADR 0009 promised a richer `interface Window` plus `var sendPrompt` augmentation than what the three source repos actually use. Trimmed the ADR to match the implementation (`declare global { function sendPrompt(text: string): void }`) before the snapshot locked it. Pattern: validate ADR text against the lift source, not against speculative consumer ergonomics.
+- **Commit message style.** User wants every commit to be a Conventional Commits title and nothing else - no body, no co-author, no trailers. Captured in CLAUDE.md, PHASE-PLAYBOOK.md, and a memory entry.
+- **Auto-proceed Stage 7.** User wants Stage 6 green to flow straight into Stage 7 without a confirmation pause. Captured as a feedback memory for future phases.

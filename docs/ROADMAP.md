@@ -6,7 +6,8 @@ High-level phase overview. Detailed PRDs live in `docs/prds/`. Rationale lives i
 
 - **Phase 0 - Shipped 2026-05-27.** Direct push to `main` on both affected external repos. TF @ `e9894d9`, LE @ `0863044`. See PRD 000.
 - **Phase 1 - Shipped 2026-05-27.** Direct push to `main` on the visill repo at `jordanl17/visill` (public). Commit `cb31904`; first CI run green in 17s. See PRD 001.
-- **Phases 2-10 - Proposed.** PRDs drafted, awaiting upstream phases.
+- **Phase 2 - Shipped 2026-05-27.** Direct push to `main`. Commit `d6987de`; CI green in 18s. The `visill` package now ships the seven SDK exports plus ADR 0009. Unblocks Phase 3 (build tooling) and Phase 6 (scaffolder template imports). See PRD 002.
+- **Phases 3-10 - Proposed.** PRDs drafted, awaiting upstream phases.
 
 ## Repo
 
