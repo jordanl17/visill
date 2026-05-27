@@ -8,5 +8,8 @@
     "@visill/build": "0.0.0",
     "@visill/test": "0.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "initial-rc",
+    "visill-build-initial"
+  ]
 }
