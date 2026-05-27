@@ -21,7 +21,7 @@ Use a single pnpm workspace with Changesets driving versions and changelogs. Eac
 - Each package has its own version line and CHANGELOG.
 - A single PR can bump several packages atomically when needed.
 - pnpm workspace handles internal linking between packages.
-- Publishing to npm requires an `NPM_TOKEN` GitHub Actions secret on the visill repo. Phase 1 does not need it - CI is read-only and never publishes. The release workflow lands in Phase 7 (see [PRD 007](../prds/007-phase-7-10-release-and-migration.md) and forthcoming ADR 0019). The coordinator must surface the token requirement to the user at Phase 7 kickoff and pause execution until the secret is configured. No publish step runs without it.
+- Publishing to npm requires an `NPM_TOKEN` GitHub Actions secret on the visill repo. Phase 1 does not need it - CI is read-only and never publishes. The release workflow lands in Phase 7 (see [PRD 007](../prds/007-phase-7-10-release-and-migration.md) and forthcoming ADR 0019). The secret is configured on `jordanl17/visill` as of 2026-05-27, so the Phase 7 token gate is already satisfied; the coordinator still re-checks via `gh secret list --repo jordanl17/visill` at kickoff and aborts if missing.
 
 ## References
 
