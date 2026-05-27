@@ -12,7 +12,8 @@
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "release": "pnpm -r build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.10",

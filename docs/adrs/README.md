@@ -39,7 +39,7 @@ Cross-cutting constraints | 0022+ | as needed
 | 0016 | Scaffolder single-prompt UX | 6 | Accepted |
 | 0017 | Vendored example as integration gate | 6 | Accepted |
 | 0018 | Template-shipped lockfile and ignore policy | 6 | Accepted |
-| 0019 | RC publish via Changesets prereleases | 7 | Pending |
+| 0019 | RC publish via Changesets prereleases | 7 | Accepted |
 | 0020 | Migration branch + `pnpm.overrides link:` strategy | 8 | Pending |
 | 0021 | Parity gates for migration PRs | 8 | Pending |
 | 0022 | Evals run locally only, never in CI | 6 | Pending |

@@ -1,0 +1,12 @@
+{
+  "mode": "pre",
+  "tag": "rc",
+  "initialVersions": {
+    "claude-skill-decision-tree": "0.1.0",
+    "create-visill": "0.0.0",
+    "visill": "0.0.0",
+    "@visill/build": "0.0.0",
+    "@visill/test": "0.0.0"
+  },
+  "changesets": []
+}
