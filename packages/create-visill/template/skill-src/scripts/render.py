@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Canonical stdin renderer for visill widget skills: reads a JSON payload,
-validates it against the sibling schema.json, then renders template.mustache via vendored chevron."""
+validates it against assets/schema.json, then renders assets/widget-bundled.html
+via vendored chevron."""
 
 import json
 import sys
@@ -19,8 +20,8 @@ HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE / '_vendor'))
 import chevron
 
-SCHEMA_PATH = HERE / 'schema.json'
-TEMPLATE_PATH = HERE / 'template.mustache'
+SCHEMA_PATH = HERE.parent / 'assets' / 'schema.json'
+TEMPLATE_PATH = HERE.parent / 'assets' / 'widget-bundled.html'
 
 JSON_TYPE_MAP = {
     'string': str,
