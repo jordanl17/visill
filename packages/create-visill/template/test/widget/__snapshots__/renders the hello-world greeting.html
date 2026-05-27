@@ -1,0 +1,20 @@
+<style>*,:before,:after{box-sizing:border-box}body{font-family:var(--font-sans,system-ui, sans-serif);color:var(--color-text-primary);background:var(--color-background-primary);margin:0;line-height:1.5}.root{flex-direction:column;gap:12px;padding:16px;display:flex}.title{color:var(--color-text-primary);margin:0;font-size:15px;font-weight:500}.body{color:var(--color-text-secondary);grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;font-size:13px;display:grid}</style>
+<script type="module">function e(e,t=document){const n=t.querySelector(e);if(null===n)throw new Error(`requireElement: no element matched selector ${e}`);return n}var t;t=function(){const{name:t}=function(t){const n=e(`#${t}`).textContent??"";if(n.trim().length>0)return JSON.parse(n);throw new Error(`readDataIsland: data island "#${t}" has empty textContent`)}("root-data"),n=e("#root"),r=`Hello, ${t}!`,o=`Hello, ${a=t,a.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}!`;var a;n.innerHTML=`\n    <div class="root">\n      <p class="body">${o}</p>\n      <button id="send-greeting" type="button">Send greeting to chat</button>\n    </div>\n  `,e("#send-greeting",n).addEventListener("click",()=>{var e;e=r,globalThis.sendPrompt(e)})},"loading"===document.readyState?document.addEventListener("DOMContentLoaded",t,{once:!0}):t();</script>
+<h2
+class="sr-only"
+style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0)"
+>
+<<SKILL_TITLE>> widget.
+</h2>
+<div style="padding: 1rem 0">
+<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px">
+<h3 style="margin: 0"><<SKILL_TITLE>></h3>
+</div>
+<div id="root"></div>
+</div>
+<!-- render.py substitutes "world" with the JSON-encoded `name` value from the skill payload. The widget reads this data island and renders the greeting. -->
+<script id="root-data" type="application/json">
+{
+"name": "world"
+}
+</script>

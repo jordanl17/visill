@@ -6,4 +6,5 @@ skill/
 *.md
 packages/visill-test/test/fixtures/
 packages/create-visill/template/widget-src/widget.html
+packages/create-visill/template/test/widget/__snapshots__/
 packages/create-visill/template-dev/

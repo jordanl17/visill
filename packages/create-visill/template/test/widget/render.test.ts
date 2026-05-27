@@ -14,9 +14,11 @@ const packageJson = JSON.parse(readFileSync(resolve(__dirname, '../../package.js
 }
 const skillName = stripPrefix(packageJson.name)
 const renderPath = resolve(__dirname, '../../skill', skillName, 'scripts/render.py')
+const snapshotDir = resolve(__dirname, '__snapshots__')
 
 createRenderTests({
   renderPath,
+  snapshotDir,
   payloads: {
     'renders the hello-world greeting': { input: { name: 'world' } },
     'rejects payload missing the required name': {
