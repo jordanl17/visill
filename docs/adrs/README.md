@@ -32,8 +32,8 @@ Cross-cutting constraints | 0022+ | as needed
 | 0009 | SDK public API surface | 2 | Accepted |
 | 0010 | `finalizeBundle` HTML rewrites | 3 | Accepted |
 | 0011 | Skill-name resolution precedence | 3 | Accepted |
-| 0012 | `render.py` JSON-island encoding (`</` neutralisation, `_json` siblings) | 4 | Pending |
-| 0013 | Vendored chevron strategy | 4 | Pending |
+| 0012 | `render.py` JSON-island encoding (`</` neutralisation, `_json` siblings) | 4 | Accepted |
+| 0013 | Vendored chevron strategy | 4 | Accepted |
 | 0014 | Bundle-test preset shape | 5 | Pending |
 | 0015 | Render-test via Python subprocess | 5 | Pending |
 | 0016 | Scaffolder single-prompt UX | 6 | Pending |
