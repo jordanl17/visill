@@ -8,9 +8,5 @@
     "@visill/sdk": "0.0.0",
     "@visill/test": "0.0.0"
   },
-  "changesets": [
-    "initial-rc",
-    "rename-sdk",
-    "visill-build-initial"
-  ]
+  "changesets": ["initial-rc", "rename-sdk", "visill-build-initial"]
 }
