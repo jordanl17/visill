@@ -5,7 +5,7 @@
 
 ## Context
 
-Phase 6 left visill publish-ready: four packages (`visill`, `create-visill`, `@visill/build`, `@visill/test`) at `0.0.0` in a workspace driven by Changesets ([ADR 0002](./0002-monorepo-with-changesets.md)). The integration gate ([ADR 0017](./0017-vendored-example-integration-gate.md)) proves the four cooperate end-to-end against one vendored skill.
+Phase 6 left visill publish-ready: four packages (`@visill/sdk`, `create-visill`, `@visill/build`, `@visill/test`) at `0.0.0` in a workspace driven by Changesets ([ADR 0002](./0002-monorepo-with-changesets.md)). The integration gate ([ADR 0017](./0017-vendored-example-integration-gate.md)) proves the four cooperate end-to-end against one vendored skill.
 
 Three real consumer repos (`claude-targettable-feedback`, `claude-skill-decision-tree`, `claude-skill-linear-editing`) still need to migrate. Migration will surface SDK gaps the vendored example cannot. Cutting stable `0.1.0` straight to `latest` before that shakedown risks burning the first published version on a surface that turns out to be wrong.
 
@@ -16,7 +16,7 @@ ADR 0002 reserved `latest` for stable. The prerelease dist-tag is chosen here.
 Enter Changesets prerelease mode for an RC train.
 
 - `pnpm changeset pre enter rc` on visill `main`. Changesets couples the npm dist-tag to the prerelease tag in `.changeset/pre.json`, so the tag string flows through to npm.
-- `changesets/action@v1` publishes all four packages at `0.1.0-rc.0` under the `rc` dist-tag on push to `main`. Consumers fetch the latest RC with `pnpm view visill@rc version` and install with `pnpm install visill@rc`.
+- `changesets/action@v1` publishes all four packages at `0.1.0-rc.0` under the `rc` dist-tag on push to `main`. Consumers fetch the latest RC with `pnpm view @visill/sdk@rc version` and install with `pnpm install @visill/sdk@rc`.
 - Each API gap discovered during Phase 8-9 migration lands as a fix on `main` and ships as `0.1.0-rc.N+1` via the same workflow. Consumers track by tag, not by pinned version.
 - Phase 10 runs `pnpm changeset pre exit` and cuts stable `0.1.0` on `latest`.
 

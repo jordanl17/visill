@@ -7,7 +7,7 @@ Captures the decisions reached after reviewing `claude-targettable-feedback`, `c
 Two npm packages that let an author build a "visual Claude skill" (a `visualize:show_widget` skill rendered in claude.ai web or Claude Desktop) without re-deriving the bundling, render pipeline, and release plumbing.
 
 - `create-visill` - the `npm create visill` scaffolder.
-- `visill` - widget-side SDK runtime.
+- `@visill/sdk` - widget-side SDK runtime.
 
 Not in scope: Claude Code skills, the Anthropic API, claude.ai-anywhere-else. Visual skills only.
 
@@ -27,7 +27,7 @@ Not in scope: Claude Code skills, the Anthropic API, claude.ai-anywhere-else. Vi
 | 10 | Dev-aid Claude Code skills | Scaffolded into `.claude/skills/` in each visill repo. Remove `.claude/` from default gitignore |
 | 11 | Description optimiser | Out of scope for v0.1. Ship a build-time 1024-char validator only |
 | 12 | pnpm pin | `packageManager` field only. No `version:` in `pnpm/action-setup` |
-| 13 | npm names | `visill` + `create-visill` (bare) |
+| 13 | npm names | `@visill/sdk` + `create-visill` (bare scaffolder, scoped SDK) |
 | 14 | Lint + format | oxlint + prettier |
 | 15 | Next step | This design doc (no code yet) |
 
@@ -152,7 +152,7 @@ visill/                                 monorepo root, Changesets-managed
         data-island.ts                  readDataIsland<T>(scriptId)
         prompt.ts                       buildPrompt(sections)
         index.ts                        public surface
-      package.json                      name: "visill", ESM-only, zero deps
+      package.json                      name: "@visill/sdk", ESM-only, zero deps
     create-visill/                      the scaffolder
       src/index.ts                      prompts + copy
       template/                         the canonical scaffold
@@ -178,7 +178,7 @@ visill/                                 monorepo root, Changesets-managed
   package.json
 ```
 
-Note: scoped names `@visill/build` and `@visill/test`, bare names for the top two. Reads cleaner than `visill-build`. Confirm before publish.
+Note: scoped names `@visill/sdk`, `@visill/build`, and `@visill/test`; bare `create-visill` for the scaffolder so `npm create visill` works. Reads cleaner than `visill-build`. Confirm before publish.
 
 ## SDK API sketch
 
@@ -218,7 +218,7 @@ Functional declarations throughout (per user preference). No classes, no `new`. 
 ## v0.1 contents
 
 In:
-- `visill` SDK with the 7 exports above.
+- `@visill/sdk` with the 7 exports above.
 - `@visill/build` with `finalizeBundle()` and `assembleSkill()`.
 - `@visill/test` with `createBundleTests({...})`, `loadEvals`, `assertion`, `summarize`, `parseDataIslandFromHtml`.
 - `create-visill` scaffolder producing a single full-featured template.
@@ -245,7 +245,7 @@ Lockstep migration against v0.1. Phasing:
    - Plus the dead `SLOT_TOKENS` / `UNIT_DATA_ID_PATTERN` cleanup in linear-editing `shared.ts`
 2. **visill v0.0.1**: stand up the monorepo, Changesets, CI. No usable packages yet.
 3. **visill v0.1.0**: ship the four packages with hello-world scaffold passing tests.
-4. **Migration PRs (one per repo, parallel)**: rewire `vite.config.ts` to import from `@visill/build`, replace ad-hoc helpers with `visill` SDK imports, replace bundle test with `createBundleTests({...})`, gitignore `skill/`, update release flow, add `.claude/skills/`.
+4. **Migration PRs (one per repo, parallel)**: rewire `vite.config.ts` to import from `@visill/build`, replace ad-hoc helpers with `@visill/sdk` imports, replace bundle test with `createBundleTests({...})`, gitignore `skill/`, update release flow, add `.claude/skills/`.
 5. **Sanity check**: each migrated repo builds the same-or-smaller bundle, ships the same-shape zip, passes the same evals.
 
 ## Documentation architecture

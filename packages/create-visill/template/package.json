@@ -18,7 +18,7 @@
     "build:zip": "bash scripts/build-zip.sh"
   },
   "dependencies": {
-    "visill": "^0.1.0-rc.0"
+    "@visill/sdk": "^0.1.0-rc.0"
   },
   "devDependencies": {
     "@visill/build": "^0.1.0-rc.0",

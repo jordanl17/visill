@@ -5,9 +5,9 @@
 
 ## Context
 
-Three of the four workspace packages already separate tests from source: `visill-build`, `visill-test`, and `create-visill` each keep tests under a sibling directory (`test/` or `tests/`) and source under `src/`. `visill` is the outlier - eight test files sit alongside their subjects in `src/*.test.ts`.
+Three of the four workspace packages already separate tests from source: `visill-build`, `visill-test`, and `create-visill` each keep tests under a sibling directory (`test/` or `tests/`) and source under `src/`. `@visill/sdk` is the outlier - eight test files sit alongside their subjects in `src/*.test.ts`.
 
-The mixed convention causes friction. Tooling that targets sources (typecheck-only-public-API, lint rules scoped to runtime code, dts emission, bundler inputs) has to either trust filename heuristics or add explicit excludes per package. The `visill` package needed `noUncheckedIndexedAccess` exemptions and a bespoke build tsconfig to avoid emitting test types into the published dist. New contributors landing on `visill` first see a busier directory than the other three packages and infer the wrong convention.
+The mixed convention causes friction. Tooling that targets sources (typecheck-only-public-API, lint rules scoped to runtime code, dts emission, bundler inputs) has to either trust filename heuristics or add explicit excludes per package. The `@visill/sdk` package needed `noUncheckedIndexedAccess` exemptions and a bespoke build tsconfig to avoid emitting test types into the published dist. New contributors landing on `@visill/sdk` first see a busier directory than the other three packages and infer the wrong convention.
 
 The bare `test/` vs plural `tests/` split is its own micro-inconsistency. `visill-build` and `visill-test` use `test/`. `create-visill` was scaffolded with `tests/` in Phase 6 wave I.
 
@@ -19,7 +19,7 @@ Test fixtures live under `test/fixtures/`. Tests that need to read source paths 
 
 Build configs (tsup, tsconfig) target `src/` only. Test runners target `test/` only.
 
-`visill`'s eight colocated tests must migrate to `test/` to come into compliance. `create-visill`'s `tests/` must rename to `test/`.
+`@visill/sdk`'s eight colocated tests must migrate to `test/` to come into compliance. `create-visill`'s `tests/` must rename to `test/`.
 
 ## Alternatives considered
 
@@ -29,7 +29,7 @@ Build configs (tsup, tsconfig) target `src/` only. Test runners target `test/` o
 
 ## Consequences
 
-- `visill`'s `src/*.test.ts` files migrate to `packages/visill/test/`. Imports under test rewrite to `../src/<name>`. Public API snapshot test (`public-api.test.ts`) keeps consuming the built `dist/index.d.ts`.
+- `@visill/sdk`'s `src/*.test.ts` files migrate to `packages/visill/test/`. Imports under test rewrite to `../src/<name>`. Public API snapshot test (`public-api.test.ts`) keeps consuming the built `dist/index.d.ts`.
 - `create-visill/tests/scaffolder.test.ts` migrates to `create-visill/test/`. Its `vitest.config.ts` `include` glob updates from `tests/**` to `test/**`.
 - `tsconfig.json` and `tsup.config.ts` in each package can drop test-file exclusions; the dist build only sees `src/`.
 - Future packages adopt this layout from the first commit.

@@ -2,7 +2,7 @@ import { cpSync, existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const TARGET_PACKAGES = new Set(['visill', '@visill/build', '@visill/test'])
+const TARGET_PACKAGES = new Set(['@visill/sdk', '@visill/build', '@visill/test'])
 const DEPENDENCY_KEYS = [
   'dependencies',
   'devDependencies',

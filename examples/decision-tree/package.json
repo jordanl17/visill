@@ -17,7 +17,7 @@
     "eval:preview": "vite-node tests/evals/build_preview.ts --"
   },
   "dependencies": {
-    "visill": "workspace:*"
+    "@visill/sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.0",

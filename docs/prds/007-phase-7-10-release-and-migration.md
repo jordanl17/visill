@@ -13,12 +13,12 @@ Take visill from "monorepo passes its own tests on `main`" to "stable `v0.1.0` p
 **Token gate (precondition).** Before any publish step runs, confirm the `NPM_TOKEN` repo secret exists via `gh secret list --repo jordanl17/visill`. The secret was provisioned on 2026-05-27 (Granular Access Token from npmjs.com scoped to publish on the four packages, or the `@visill` org once created). If `gh secret list` reports it missing at Phase 7 kickoff, abort and ask the user to re-provision; do not proceed. See [ADR 0002](../adrs/0002-monorepo-with-changesets.md). Phase 7 is the first phase that exercises the secret; Phase 0-6 CI is read-only.
 
 - `pnpm changeset pre enter rc`. Changesets couples the npm dist-tag to the prerelease tag in `pre.json`, so the `rc` string flows through to npm and cannot be overridden in pre mode.
-- Release-Please / Changesets PR publishes `visill@0.1.0-rc.0`, `create-visill@0.1.0-rc.0`, `@visill/build@0.1.0-rc.0`, `@visill/test@0.1.0-rc.0`, all on the `rc` tag.
+- Release-Please / Changesets PR publishes `@visill/sdk@0.1.0-rc.0`, `create-visill@0.1.0-rc.0`, `@visill/build@0.1.0-rc.0`, `@visill/test@0.1.0-rc.0`, all on the `rc` tag.
 - `latest` stays empty so nothing on it is picked up accidentally.
 
 **Deliverables.** Four tarballs on npm under `rc`. CHANGELOG entries for the rc.0 cut. ADR 0019 (RC publish via Changesets prereleases) accepted.
 
-**Success criteria.** `pnpm view visill@rc version` returns `0.1.0-rc.0`. A throwaway scaffold (`pnpm create visill@rc hello`) builds a green zip end-to-end.
+**Success criteria.** `pnpm view @visill/sdk@rc version` returns `0.1.0-rc.0`. A throwaway scaffold (`pnpm create visill@rc hello`) builds a green zip end-to-end.
 
 ## 3. Phase 8 - DT canary
 
@@ -27,8 +27,8 @@ Take visill from "monorepo passes its own tests on `main`" to "stable `v0.1.0` p
 **Scope.** Long-lived branch `visill-migration` in `/Users/jordan.lawrence/Documents/repos/claude-skill-decision-tree/`.
 
 - Local dev: root `package.json` carries `pnpm.overrides` pointing each of the four visill packages at `link:../visill/packages/<pkg>`, so SDK changes propagate without a republish.
-- CI on the branch installs the published RC (`visill@0.1.0-rc.N` etc., with overrides stripped or ignored via a CI-only `.npmrc`), proving the published tarball works.
-- Rewires `vite.config.ts` to `import { defineVisillConfig, finalizeBundle, assembleSkill } from "@visill/build"`. Replaces ad-hoc helpers with `visill` SDK imports (`requireElement`, `delegate`, `readDataIsland`, `sendPrompt`, `readyDOM`). Replaces `tests/widget/bundle.test.ts` body with `createBundleTests({...})`. Gitignores `skill/`. Adds `.claude/skills/` directory if absent.
+- CI on the branch installs the published RC (`@visill/sdk@0.1.0-rc.N` etc., with overrides stripped or ignored via a CI-only `.npmrc`), proving the published tarball works.
+- Rewires `vite.config.ts` to `import { defineVisillConfig, finalizeBundle, assembleSkill } from "@visill/build"`. Replaces ad-hoc helpers with `@visill/sdk` imports (`requireElement`, `delegate`, `readDataIsland`, `sendPrompt`, `readyDOM`). Replaces `tests/widget/bundle.test.ts` body with `createBundleTests({...})`. Gitignores `skill/`. Adds `.claude/skills/` directory if absent.
 - Any new export or build option discovered during migration is filed against the visill monorepo, fixed on `main`, cut as `rc.N+1`, then consumed from the migration branch. The migration branch never patches visill packages directly.
 
 **Deliverables.** Migrated repo on `visill-migration`. Open migration PR against `claude-skill-decision-tree` `main` with all five parity gates green in CI. ADRs `0019-migration-branch-strategy.md` and `0020-parity-gates.md` accepted.
@@ -47,13 +47,13 @@ Take visill from "monorepo passes its own tests on `main`" to "stable `v0.1.0` p
 
 **Scope.** Exit prerelease, cut stable, retarget consumers.
 
-- `pnpm changeset pre exit` on visill `main`; the resulting version PR publishes `visill@0.1.0` etc. on the `latest` tag.
+- `pnpm changeset pre exit` on visill `main`; the resulting version PR publishes `@visill/sdk@0.1.0` etc. on the `latest` tag.
 - Each of the three migration branches: bump `package.json` ranges to `^0.1.0`, delete the `pnpm.overrides` block, re-run CI, request review.
 - Three migration PRs merge to their respective `main` branches.
 
 **Deliverables.** Stable tarballs on `latest`. Three merged migration PRs.
 
-**Success criteria.** `pnpm view visill version` returns `0.1.0`. Each of the three repos' `main` builds a green zip on a fresh CI run with the stable range resolved. The five backport defects from Phase 1 are absorbed into the migration commits and no longer need their own PRs.
+**Success criteria.** `pnpm view @visill/sdk version` returns `0.1.0`. Each of the three repos' `main` builds a green zip on a fresh CI run with the stable range resolved. The five backport defects from Phase 1 are absorbed into the migration commits and no longer need their own PRs.
 
 ## 6. Parity gate specification
 
@@ -102,7 +102,7 @@ The `release.yml` `pnpm/action-setup` pin fix (LE) already shipped in Phase 0 an
 
 If `v0.1.0` ships with a critical bug post-publish:
 
-- `npm deprecate visill@0.1.0 "<reason>"` (and siblings).
+- `npm deprecate @visill/sdk@0.1.0 "<reason>"` (and siblings).
 - Fix on visill `main`, cut `v0.1.1` via Changesets.
 - Consumer migration PRs consume by range (`^0.1.0`) and pick up `0.1.1` on next install. No rebase, no force-push required.
 - If a migration PR has already merged, open a follow-up bump-only PR per repo.

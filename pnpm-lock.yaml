@@ -23,7 +23,7 @@ importers:
 
   examples/decision-tree:
     dependencies:
-      visill:
+      '@visill/sdk':
         specifier: workspace:*
         version: link:../../packages/visill
     devDependencies:

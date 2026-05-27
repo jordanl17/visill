@@ -20,7 +20,7 @@ Use Vite with `vite-plugin-singlefile` to produce the single-file HTML widget ar
 
 - The Vite plugin ecosystem stays available - `vite-plugin-singlefile`, HTML transform plugins, and any future asset handlers slot in cleanly.
 - Builds emit one HTML file per widget; no sidecar JS or CSS to ship, host, or version.
-- ESM-only output aligns with the widget runtime constraint and the `visill` SDK's module shape.
+- ESM-only output aligns with the widget runtime constraint and the `@visill/sdk` module shape.
 
 ## References
 

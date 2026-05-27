@@ -5,13 +5,13 @@
 
 ## Context
 
-visill ships four packages: the SDK (`visill`), the Vite plugins (`@visill/build`), the test preset (`@visill/test`), and the scaffolder (`create-visill`). Each is unit-tested in isolation.
+visill ships four packages: the SDK (`@visill/sdk`), the Vite plugins (`@visill/build`), the test preset (`@visill/test`), and the scaffolder (`create-visill`). Each is unit-tested in isolation.
 
 The real risks live at the seams: SDK API drift, plugin output drift, `render.py` contract drift, and release-zip layout drift. Unit tests inside one package cannot see a regression that only surfaces when all four cooperate to produce a real skill. A downstream consumer would surface those regressions, but waiting for users to discover them is unacceptable.
 
 ## Decision
 
-Vendor a snapshot of upstream `claude-skill-decision-tree` as `examples/decision-tree/` in the visill monorepo. The example consumes `visill`, `@visill/build`, and `@visill/test` via `workspace:*`. Any change to those packages either builds clean against the example or breaks the integration gate.
+Vendor a snapshot of upstream `claude-skill-decision-tree` as `examples/decision-tree/` in the visill monorepo. The example consumes `@visill/sdk`, `@visill/build`, and `@visill/test` via `workspace:*`. Any change to those packages either builds clean against the example or breaks the integration gate.
 
 CI runs on every push:
 

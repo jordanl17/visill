@@ -1,5 +1,5 @@
 import type {} from './globals'
-import { readDataIsland, readyDOM, requireElement, sendPrompt } from 'visill'
+import { readDataIsland, readyDOM, requireElement, sendPrompt } from '@visill/sdk'
 
 interface RootData {
   name: string

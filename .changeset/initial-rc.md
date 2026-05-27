@@ -1,5 +1,5 @@
 ---
-'visill': minor
+'@visill/sdk': minor
 'create-visill': minor
 '@visill/build': minor
 '@visill/test': minor

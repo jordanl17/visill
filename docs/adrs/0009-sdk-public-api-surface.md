@@ -5,7 +5,7 @@
 
 ## Context
 
-The `visill` package is the widget-side runtime SDK. It replaces the helpers copy-pasted across three existing widget repos: `claude-targettable-feedback`, `claude-skill-decision-tree`, and `claude-skill-linear-editing`. Each repo carries the same handful of utilities for talking to the host, waiting on the DOM, querying elements, delegating events, reading inline JSON, and assembling prompt strings. Phase 2 lifts those utilities into one shared package.
+The `@visill/sdk` package is the widget-side runtime SDK. It replaces the helpers copy-pasted across three existing widget repos: `claude-targettable-feedback`, `claude-skill-decision-tree`, and `claude-skill-linear-editing`. Each repo carries the same handful of utilities for talking to the host, waiting on the DOM, querying elements, delegating events, reading inline JSON, and assembling prompt strings. Phase 2 lifts those utilities into one shared package.
 
 The surface must stay small. A framework with thirty exports invites bloat and forks; a framework with three exports forces authors back into copy-paste. Seven exports cover every concrete pattern observed across the three source repos, and every one of them is motivated by code that already ships:
 
@@ -21,7 +21,7 @@ Locking the surface in an ADR stops drift. The `.d.ts` snapshot test (PRD 002 se
 
 ## Decision
 
-The `visill` package exports exactly the following seven names. Signatures are verbatim from `docs/design/visill-overview.md` "SDK API sketch".
+The `@visill/sdk` package exports exactly the following seven names. Signatures are verbatim from `docs/design/visill-overview.md` "SDK API sketch".
 
 1. `sendPrompt(text: string): void`. Re-exported from `src/host.ts`, which also ships the ambient `declare global { function sendPrompt(text: string): void }` augmentation that types `globalThis.sendPrompt` for consumers. This is the same shape the three source skill repos already use.
 2. `readyDOM(init: () => void): void`.
@@ -49,7 +49,7 @@ Locked behaviours, resolving the open questions in PRD 002 section 11:
 - The package ships ESM-only with `sideEffects: false`. Bundlers drop unused exports without configuration.
 - The `.d.ts` snapshot test in `packages/visill/src/public-api.test.ts` locks this surface. A rename, signature change, or new export fails the test until the snapshot is regenerated and the diff reviewed.
 - Future additions require a new ADR before the snapshot moves.
-- Importing `sendPrompt` brings the ambient `globalThis.sendPrompt` declaration along with it. The augmentation lives in `src/host.ts` and re-exports through `src/index.ts`; consumers that import any visill symbol pick up the type. This is the one acknowledged side-effect of consuming the SDK, documented in `host.ts` and the package README.
+- Importing `sendPrompt` brings the ambient `globalThis.sendPrompt` declaration along with it. The augmentation lives in `src/host.ts` and re-exports through `src/index.ts`; consumers that import any `@visill/sdk` symbol pick up the type. This is the one acknowledged side-effect of consuming the SDK, documented in `host.ts` and the package README.
 
 ## References
 

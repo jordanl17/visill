@@ -21,7 +21,7 @@
  * script.
  */
 
-import { readDataIsland, readyDOM, requireElement, sendPrompt } from 'visill';
+import { readDataIsland, readyDOM, requireElement, sendPrompt } from '@visill/sdk';
 
 interface Branch {
   id: string;

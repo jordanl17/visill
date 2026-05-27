@@ -1,10 +1,10 @@
-# PRD 002 - Phase 2: `visill` SDK package
+# PRD 002 - Phase 2: `@visill/sdk` SDK package
 
 Status: Shipped 2026-05-27. Owner: jordan.lawrence@sanity.io. Date: 2026-05-27.
 
 ## 1. Goal
 
-Ship the widget-side runtime SDK as the `visill` npm package: seven tree-shakeable, ESM-only exports that replace the helpers copy-pasted across the three existing widget repos. Phase 2 is library-only - no scaffolder, no Vite plugins, no eval helpers.
+Ship the widget-side runtime SDK as the `@visill/sdk` npm package: seven tree-shakeable, ESM-only exports that replace the helpers copy-pasted across the three existing widget repos. Phase 2 is library-only - no scaffolder, no Vite plugins, no eval helpers.
 
 ## 2. Scope
 
@@ -31,7 +31,7 @@ All paths under `packages/visill/`.
 
 | File | Purpose |
 |---|---|
-| `package.json` | Name `visill`, `type: "module"`, `exports` map, `sideEffects: false`, zero runtime deps |
+| `package.json` | Name `@visill/sdk`, `type: "module"`, `exports` map, `sideEffects: false`, zero runtime deps |
 | `tsconfig.json` | Strict, `moduleResolution: "bundler"`, emit `.d.ts` |
 | `src/host.ts` | `sendPrompt` re-export + ambient `globalThis.sendPrompt` declaration |
 | `src/ready-dom.ts` | `readyDOM(init)` |
@@ -77,7 +77,7 @@ Each export gets one `src/<name>.test.ts`. JSDOM env. No external deps.
 
 - All Vitest tests green in CI under Node 20 and 22.
 - `pnpm pack` produces a tarball whose `package.json` advertises only ESM (`type: "module"`, `exports: { ".": { "import": "./dist/index.js", "types": "./dist/index.d.ts" } }`), with no `main` and no `require` entry.
-- Importing `{ requireElement } from "visill"` into a throwaway Vite consumer and building yields a bundle with zero source bytes from the six unused modules (verified by grep for known marker strings).
+- Importing `{ requireElement } from "@visill/sdk"` into a throwaway Vite consumer and building yields a bundle with zero source bytes from the six unused modules (verified by grep for known marker strings).
 - ADR `0009-sdk-public-api-surface.md` merged in the same phase, status `Accepted`.
 - Bundle size: index plus all seven modules under 2 KB minified, under 1 KB gzipped. Soft target, recorded as a CI artefact rather than a gate.
 
@@ -99,12 +99,12 @@ One commit per export, plus skeleton and lock. Order:
 ## 9. Dependencies
 
 - Depends on Phase 1 (monorepo scaffold, pnpm workspace, Changesets, oxlint + prettier, CI skeleton).
-- Blocks Phase 6 (scaffolder template's `widget-src/widget.ts` imports from `visill`).
-- Blocks the three migration PRs (Phase 7+), which swap inline helpers for `visill` imports.
+- Blocks Phase 6 (scaffolder template's `widget-src/widget.ts` imports from `@visill/sdk`).
+- Blocks the three migration PRs (Phase 7+), which swap inline helpers for `@visill/sdk` imports.
 
 ## 10. Risks and mitigations
 
-- **`sendPrompt` global typing leakage.** Declaring `globalThis.sendPrompt` from a published package can pollute consumer global scope. Mitigation: the declaration lives in `host.ts`, re-exported through `index.ts`, documented as a side-effect of importing `sendPrompt`. A consumer-project type test confirms `globalThis.sendPrompt` is typed only when `visill` is imported.
+- **`sendPrompt` global typing leakage.** Declaring `globalThis.sendPrompt` from a published package can pollute consumer global scope. Mitigation: the declaration lives in `host.ts`, re-exported through `index.ts`, documented as a side-effect of importing `sendPrompt`. A consumer-project type test confirms `globalThis.sendPrompt` is typed only when `@visill/sdk` is imported.
 - **`delegate` selector matching when `event.target` is a descendant of the matched element.** `closest()` walks upward, so a click on a child of `selector` resolves to the ancestor correctly. The bug shape is selecting an element that itself contains `root` (e.g. `selector` matches a parent of `root`). Mitigation: assert `root.contains(matched)` before invoking the handler, covered by a dedicated test.
 - **`ownDescendant` generalisation drift.** The original implementation pins scope via `.closest('.unit') === unit`. The generalised version takes a `selector` from the caller. When callers pass a non-class selector that matches `root` itself, behaviour stays correct (closest returns root). Mitigation: a test covers the nested-instance case from targettable-feedback.
 - **`.d.ts` snapshot churn.** TypeScript version bumps can reformat declaration output. Mitigation: pin TS in this package's devDeps; snapshot comparison is whitespace-tolerant (trim plus collapse blank lines).

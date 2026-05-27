@@ -5,7 +5,7 @@
 
 ## Context
 
-visill ships four packages: `visill` (widget runtime), `create-visill` (scaffolder), `@visill/build` (Vite plugins), and `@visill/test` (Vitest preset). Each evolves at its own cadence - the runtime stabilises early, while the scaffolder and build plugins churn through Phase 1-10. They share TypeScript config, lint rules, and test setup, and some changes (e.g. a runtime event shape) span more than one package and must land atomically.
+visill ships four packages: `@visill/sdk` (widget runtime), `create-visill` (scaffolder), `@visill/build` (Vite plugins), and `@visill/test` (Vitest preset). Each evolves at its own cadence - the runtime stabilises early, while the scaffolder and build plugins churn through Phase 1-10. They share TypeScript config, lint rules, and test setup, and some changes (e.g. a runtime event shape) span more than one package and must land atomically.
 
 ## Decision
 

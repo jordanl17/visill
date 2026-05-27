@@ -73,7 +73,7 @@ Escalation: two failed fix attempts in a row stop the loop and surface to the us
 
 ## Releases
 
-Releases run on Changesets. Four public packages publish: `visill`, `create-visill`, `@visill/build`, `@visill/test`. Private packages under `examples/` get version bumps but never reach npm.
+Releases run on Changesets. Four public packages publish: `@visill/sdk`, `create-visill`, `@visill/build`, `@visill/test`. Private packages under `examples/` get version bumps but never reach npm.
 
 **A release needs a changeset file.** Source-only edits move nothing. To trigger a version bump, drop a markdown file in `.changeset/`:
 

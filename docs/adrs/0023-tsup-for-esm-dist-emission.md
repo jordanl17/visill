@@ -11,11 +11,11 @@ Until Phase 6, builds ran `tsc -p tsconfig.json`. tsc passes extension-less impo
 
 Phase 6's vendored-example integration gate (ADR 0017) loaded `@visill/build` from `examples/decision-tree/vite.config.ts`. Vite externalizes its config-time deps and lets Node resolve them. Node hit `dist/index.js`'s `import './finalize-bundle'` and failed with `ERR_MODULE_NOT_FOUND`.
 
-This is a latent bug across all three plain-tsc packages (`visill`, `@visill/build`, `@visill/test`). It only surfaces when a Node ESM consumer loads the package directly.
+This is a latent bug across all three plain-tsc packages (`@visill/sdk`, `@visill/build`, `@visill/test`). It only surfaces when a Node ESM consumer loads the package directly.
 
 ## Decision
 
-Replace `tsc` with `tsup` for `visill`, `@visill/build`, and `@visill/test`. Each ships a single bundled `dist/index.js` plus `dist/index.d.ts` from tsup's built-in dts emission.
+Replace `tsc` with `tsup` for `@visill/sdk`, `@visill/build`, and `@visill/test`. Each ships a single bundled `dist/index.js` plus `dist/index.d.ts` from tsup's built-in dts emission.
 
 `create-visill` already uses tsup (Phase 6 wave A). All four workspace packages now share the build tool.
 
