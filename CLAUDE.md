@@ -93,6 +93,7 @@ Skip it for: tool-call shell output, raw `git log` excerpts, code-only edits wit
 - Hyphens only in prose; no em dashes.
 - No negated boolean expressions, no IIFEs, no single-character variable names.
 - **Prettier style is binding.** The workspace `.prettierrc` mandates `semi: false`, `singleQuote: true`, `trailingComma: "all"`, `printWidth: 100`, `tabWidth: 2`. Every sub-agent prompt that authors TS, JS, or JSON MUST repeat this rule verbatim, and the coordinator MUST run `pnpm prettier --write <touched-paths>` after each wave before any review-diff or snapshot-locking task reads the files. Snapshots and downstream prompts then see the formatted form, never the sub-agent's raw output.
+- **TypeScript imports are extension-less.** All source files are `.ts` (no `.js` files in any `src/`). The workspace `tsconfig.base.json` uses `moduleResolution: "Bundler"`, which resolves relative imports without an extension. Write `from './bundle'`, never `from './bundle.js'` or `from './bundle.ts'`. The `.js` form is a `NodeNext` convention referring to the eventual compiled output; it works under `Bundler` but produces inconsistent style across packages. Sub-agent prompts that author re-export or import-bearing files MUST repeat this rule verbatim.
 - Functional declarations and higher-order functions over for-loops where reasonable.
 - Code comments: never explain WHAT (well-named identifiers do that). Only explain WHY when non-obvious. No temporal or change-related comments.
 - Evals run locally only, never in CI (see `docs/adrs/0022-evals-local-only.md`).
