@@ -31,7 +31,7 @@ Cross-cutting constraints | 0022+ | as needed
 | 0008 | pnpm pin via `packageManager` field | 1 | Pending |
 | 0009 | SDK public API surface | 2 | Accepted |
 | 0010 | `finalizeBundle` HTML rewrites | 3 | Accepted |
-| 0011 | Skill-name resolution precedence | 3 | Accepted |
+| 0011 | Skill-name resolution precedence | 3 | Superseded by 0025 |
 | 0012 | `render.py` JSON-island encoding (`</` neutralisation, `_json` siblings) | 4 | Accepted |
 | 0013 | Vendored chevron strategy | 4 | Accepted |
 | 0014 | Bundle-test preset shape | 5 | Accepted |
@@ -45,6 +45,7 @@ Cross-cutting constraints | 0022+ | as needed
 | 0022 | Evals run locally only, never in CI | 6 | Pending |
 | 0023 | tsup for ESM dist emission | 6 | Accepted |
 | 0024 | Tests separated from source | 6.1 | Accepted |
+| 0025 | Skill name resolved from package.json#name only | 6.1 | Accepted |
 
 ## PRD ↔ ADR drift to fix at authoring time
 

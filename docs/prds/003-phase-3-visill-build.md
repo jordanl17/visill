@@ -85,6 +85,8 @@ From `scripts/build-zip.sh` (line 7): the skill-name derivation graduates into `
 
 Rationale captured in ADR 0008.
 
+Superseded in Phase 6.1 by [ADR 0025](../adrs/0025-skill-name-from-package-json.md): `visill.config.ts` is no longer part of the `resolveSkillName` contract; only `package.json#name` is consulted.
+
 ## 8. Success criteria
 
 - `pnpm --filter @visill/build test` passes locally and in CI.
@@ -93,6 +95,8 @@ Rationale captured in ADR 0008.
 - `widget-bundled.html` always contains `<script type="module">` and never `crossorigin` or `rel="stylesheet"` on the inlined `<style>`/`<script>`.
 - Two consecutive builds yield byte-equal `skill/hello/` trees.
 - A consumer `vite.config.ts` reduces to roughly: import `defineVisillConfig`, call `resolveSkillName(import.meta.dirname)`, export `defineVisillConfig({ build: { outDir: ... } })`. Five lines plus imports.
+
+Superseded in Phase 6.1 by [ADR 0025](../adrs/0025-skill-name-from-package-json.md): `visill.config.ts` is no longer part of the `resolveSkillName` contract; only `package.json#name` is consulted.
 
 ## 9. Commits within this phase
 

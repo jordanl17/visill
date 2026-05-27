@@ -54,7 +54,7 @@ scripts/build-zip.sh
 vite.config.ts                  imports plugins from `visill/build`
 package.json                    "packageManager": "pnpm@x.y.z"
 release-please-config.json
-visill.config.ts                single source of truth for skill name etc.
+visill.config.ts                (removed in Phase 6.1 - see ADR 0025)
 ```
 
 Build pipeline (Vite + two plugins shipped by `visill/build`):
@@ -83,7 +83,7 @@ Release: release-please opens version PR, on merge the second job zips `skill/<n
 
 Each appears identically (or near-identically) in 2-3 of the existing repos and graduates into the framework:
 
-1. Skill name derived from `package.json#name` minus `claude-skill-` prefix - single source of truth, surfaced via `visill.config.ts`.
+1. Skill name derived from `package.json#name` minus `claude-skill-` prefix - single source of truth (the `visill.config.ts` override was removed in Phase 6.1; see ADR 0025).
 2. `finalizeBundle` HTML post-pass (shared plugin).
 3. `assembleSkill` copy + template + chmod pipeline (shared plugin).
 4. `render.py` runtime: stdin-only, schema-validate, auto `_json` siblings, `</` neutralisation, chevron render.
@@ -161,7 +161,6 @@ visill/                                 monorepo root, Changesets-managed
         tests/...
         .claude/skills/...
         .github/workflows/...
-        visill.config.ts
         package.json (template)
       package.json                      name: "create-visill"
     visill-build/                       Vite plugins

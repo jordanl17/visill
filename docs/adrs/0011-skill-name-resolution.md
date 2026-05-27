@@ -1,6 +1,6 @@
 # ADR 0011 - Skill-name resolution
 
-- Status: Accepted
+- Status: Superseded by 0025
 - Date: 2026-05-27
 
 ## Context

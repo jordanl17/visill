@@ -120,6 +120,8 @@ Mirrors the design doc's Architecture layout exactly. File list:
 - `release-please-config.json`, `.release-please-manifest.json`
 - `README.md`, `LICENSE`
 
+Phase 6.1 follow-up: `visill.config.ts` was removed from the template per [ADR 0025](../adrs/0025-skill-name-from-package-json.md).
+
 ### C. `examples/decision-tree/`
 
 Vendored snapshot of the upstream decision-tree repo, rewritten to:

@@ -30,7 +30,6 @@ Evals never run in CI. Run them on your machine before pushing.
 - `widget-src/` - widget entry, components, styles.
 - `skill-src/` - SKILL.md and any supporting markdown.
 - `tests/` - widget tests and eval fixtures.
-- `visill.config.ts` - skill name, version, build options.
 
 ## Publish
 
