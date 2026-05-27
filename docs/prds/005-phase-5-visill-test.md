@@ -1,6 +1,6 @@
 # PRD 005 - Phase 5: `@visill/test`
 
-Status: Proposed. Owner: jordan.lawrence@sanity.io. Date: 2026-05-27.
+Status: Shipped. Owner: jordan.lawrence@sanity.io. Date: 2026-05-27.
 
 ## 1. Goal
 
@@ -103,3 +103,22 @@ Blocks Phase 6 (`create-visill` scaffolder) - the scaffolder template's `tests/w
 
 - Is `assertion()` too thin (a 5-line constructor) to justify shipping? Ship it: the named import is a documentation surface and refactor anchor, and the cost is trivial.
 - Should `createRenderTests` accept an alternate interpreter (e.g. `python3.12`) for CI variance? Defer until an environment forces it.
+
+## 13. Delivery
+
+Shipped 2026-05-27 via direct push to `main` on `jordanl17/visill`. Four commits land the phase: `8e74ae8` (feat: the six-export surface + four meta-tests + fixtures + ADRs 0014/0015 Accepted), `f69b9da` (docs: CLAUDE.md rule mandating extension-less TS imports, captured mid-phase), `fcf6ee2` (chore: `.prettierignore` adds the fixtures dir after a CI prettier-check failure on the deliberately-handcrafted bundle HTML), and `c29d546` (docs: Phase 6 PRD §3 enumerated with canonical ignore patterns, ADR 0018 renamed to cover lockfile + ignore policy). CI green on the final tip after one recovery round.
+
+- Deliverables match PRD §3: six exports, five types, four broken-bundle fixtures, the render-fixture dir (render.py byte-identical to the create-visill template plus the vendored chevron tree plus a minimal schema/template/payloads), four meta-test files. ADRs 0014 + 0015 Accepted and indexed.
+- 40 tests pass across the four meta files (28 bundle.test.ts sub-assertions + 5 evals + 5 data-island + 2 render). Workspace gates green pre- and post-simplifier: 23 visill + 18 visill-build + 40 visill-test = 81 tests; typecheck, lint, build all clean.
+- The `createBundleTests` describe/it titles match the DT source byte-identically when called with DT's parameter values, satisfying PRD §8 success criterion 5 and making the Phase 8 migration mechanical.
+- `createRenderTests` carries a module-load python3 probe so missing-interpreter environments fail fast with a clear message rather than producing an opaque ENOENT inside a test.
+- The simplifier pass made one tightening (a no-op ternary in `bundle.test.ts` collapsed to a `!==` comparison) and left the rest of the diff intact.
+
+## 14. Lessons learned
+
+- **`.js` import suffixes are wrong for `moduleResolution: "Bundler"`.** Spotted mid-phase: the initial `src/index.ts` re-exports used `from './bundle.js'` (a NodeNext convention referring to the compiled output). It typechecks under Bundler resolution but produces inconsistent style against sibling packages, all of which omit the extension. Landed as a CLAUDE.md hard rule in commit `f69b9da` so the next phase's sub-agent prompts inherit it.
+- **Prettier needs to know which HTML files are deliberately handcrafted.** The four broken-bundle fixtures fail prettier-check because their structure is load-bearing: missing-type-module.html's bare `<script>` followed by a comment (not a keyword) is what keeps the negative-pattern assertion in `noBareScript` clean. Reformatting them inverts the test's truth value. Fix: add `packages/visill-test/test/fixtures/` to `.prettierignore`. Caught by CI; one recovery round.
+- **Canonical ignore patterns differ across the three existing skills only in trivial ways.** A side audit (prompted by the prettier failure) showed that all three skill repos converge on the same `.gitignore`, `.prettierignore`, and `.oxlintrc.json` patterns with tiny variations. Phase 6 PRD §3 now enumerates the canonical sets so the Phase 6 sub-agent lifts them verbatim. ADR 0018 was renamed from "Opinionated lockfile policy" to "Template-shipped lockfile and ignore policy" to cover both.
+- **Strict TypeScript settings bite on regex captures.** `noUncheckedIndexedAccess` types `match[1]` as `string | undefined` even when the capture group is mandatory. Use `match[1] ?? ''` (or restructure to bind the capture before use). The runtime guarantee that group 1 is defined is invisible to the type checker.
+- **`@types/node` is a per-package devDep, not a workspace-level inheritance.** `packages/visill` and `packages/visill-build` each carry their own entry. Adding a new package that imports `node:*` requires the same explicit dep; the workspace doesn't pull it in automatically. The first typecheck after dispatching Wave 1 caught this immediately.
+- **Vitest defaults are still the floor.** No `it()` extended its timeout; the Python subprocess round-trip clocks at ~50ms per payload, leaving four orders of magnitude of headroom under the 5s default.
