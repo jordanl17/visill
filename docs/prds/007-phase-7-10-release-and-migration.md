@@ -10,6 +10,8 @@ Take visill from "monorepo passes its own tests on `main`" to "stable `v0.1.0` p
 
 **Scope.** Enter Changesets prerelease mode and publish all four packages under the `next` dist-tag.
 
+**Token gate (precondition).** Before any publish step runs, confirm an `NPM_TOKEN` repo secret exists on the visill GitHub repo. If absent, surface to the user, pause Phase 7 until provided. The token is a Granular Access Token from npmjs.com scoped to publish on the four packages (or the `@visill` org once created). See [ADR 0002](../adrs/0002-monorepo-with-changesets.md). This is the first phase in the rollout that needs the secret; Phase 0-6 CI is read-only.
+
 - `pnpm changeset pre enter rc`
 - Release-Please / Changesets PR publishes `visill@0.1.0-rc.0`, `create-visill@0.1.0-rc.0`, `@visill/build@0.1.0-rc.0`, `@visill/test@0.1.0-rc.0`, all with `--tag next`.
 - `latest` stays empty so nothing on it is picked up accidentally.
