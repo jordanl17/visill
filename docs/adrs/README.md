@@ -36,13 +36,14 @@ Cross-cutting constraints | 0022+ | as needed
 | 0013 | Vendored chevron strategy | 4 | Accepted |
 | 0014 | Bundle-test preset shape | 5 | Accepted |
 | 0015 | Render-test via Python subprocess | 5 | Accepted |
-| 0016 | Scaffolder single-prompt UX | 6 | Pending |
-| 0017 | Vendored example as integration gate | 6 | Pending |
-| 0018 | Template-shipped lockfile and ignore policy | 6 | Pending |
+| 0016 | Scaffolder single-prompt UX | 6 | Accepted |
+| 0017 | Vendored example as integration gate | 6 | Accepted |
+| 0018 | Template-shipped lockfile and ignore policy | 6 | Accepted |
 | 0019 | RC publish via Changesets prereleases | 7 | Pending |
 | 0020 | Migration branch + `pnpm.overrides link:` strategy | 8 | Pending |
 | 0021 | Parity gates for migration PRs | 8 | Pending |
 | 0022 | Evals run locally only, never in CI | 6 | Pending |
+| 0023 | tsup for ESM dist emission | 6 | Accepted |
 
 ## PRD ↔ ADR drift to fix at authoring time
 

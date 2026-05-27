@@ -1,0 +1,124 @@
+.b {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+.b:hover {
+  border-color: var(--color-border-secondary);
+}
+.b.active {
+  border-color: #534ab7;
+  background: #eeedfe;
+}
+.b.dim {
+  opacity: 0.5;
+}
+.b.committed {
+  border-color: #3b6d11;
+  background: #eaf3de;
+}
+.bt {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+.b.active .bt {
+  color: #26215c;
+}
+.b.committed .bt {
+  color: #173404;
+}
+.bs {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+.bp {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  border-top: 0.5px dashed var(--color-border-tertiary);
+  padding-top: 8px;
+  margin-top: auto;
+}
+.bn {
+  font-size: 12px;
+  color: #534ab7;
+  background: #eeedfe;
+  padding: 6px 8px;
+  border-radius: var(--border-radius-md);
+  font-style: italic;
+}
+.nb {
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary);
+  font-size: 12px;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  align-self: flex-start;
+}
+.nb:hover {
+  color: var(--color-text-primary);
+}
+.bg {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+}
+.lv {
+  margin-bottom: 1rem;
+}
+.lm {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  margin-bottom: 6px;
+  letter-spacing: 0.4px;
+  font-weight: 500;
+  font-family: var(--font-mono);
+}
+.lq {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0 0 4px;
+  color: var(--color-text-primary);
+}
+.lbasis {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  margin-bottom: 12px;
+  font-style: italic;
+}
+.ni {
+  width: 100%;
+  font: inherit;
+  font-size: 12px;
+  padding: 6px 8px;
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  resize: vertical;
+  min-height: 36px;
+}
+.cr {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+}
+.rule {
+  border-left: 2px solid #534ab7;
+  padding-left: 14px;
+  margin-left: 4px;
+}

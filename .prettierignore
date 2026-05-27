@@ -5,3 +5,5 @@ coverage
 skill/
 *.md
 packages/visill-test/test/fixtures/
+packages/create-visill/template/widget-src/widget.html
+packages/create-visill/template-dev/

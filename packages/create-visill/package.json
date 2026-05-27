@@ -2,18 +2,39 @@
   "name": "create-visill",
   "version": "0.0.0",
   "type": "module",
+  "description": "Scaffold a new visill skill.",
+  "keywords": [
+    "visill",
+    "claude",
+    "skill",
+    "scaffold",
+    "cli"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.11.0"
+  },
   "bin": {
     "create-visill": "./dist/index.js"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "template",
+    "scripts",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsup && chmod 0755 dist/index.js",
     "lint": "oxlint .",
-    "test": "echo 'no tests yet' && exit 0",
-    "typecheck": "tsc --noEmit"
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "node scripts/prepublish-guard.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
   }
 }

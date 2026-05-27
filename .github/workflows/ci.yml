@@ -21,3 +21,87 @@ jobs:
       - run: pnpm -r lint
       - run: pnpm -r test
       - run: pnpm prettier --check .
+
+  scaffolder-smoke:
+    runs-on: ubuntu-latest
+    needs: ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Build create-visill
+        run: pnpm -F create-visill build
+      - name: Materialise template-dev
+        run: node packages/create-visill/scripts/build-template.mjs
+      - name: Scaffold hello skill and build it against local packages
+        run: |
+          SCAFFOLD_DIR=$(mktemp -d)
+          echo "SCAFFOLD_DIR=$SCAFFOLD_DIR" >> "$GITHUB_ENV"
+          cd "$SCAFFOLD_DIR"
+          node "$GITHUB_WORKSPACE/packages/create-visill/dist/index.js" hello
+          cd hello
+          node -e "
+            const pkg = require('./package.json');
+            pkg.dependencies.visill = 'file:$GITHUB_WORKSPACE/packages/visill';
+            pkg.devDependencies['@visill/build'] = 'file:$GITHUB_WORKSPACE/packages/visill-build';
+            pkg.devDependencies['@visill/test'] = 'file:$GITHUB_WORKSPACE/packages/visill-test';
+            require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2) + '\n');
+          "
+          pnpm install --no-frozen-lockfile
+          pnpm build
+          pnpm test
+      - name: Assert zip contents and shape
+        run: |
+          ZIP_PATH="$SCAFFOLD_DIR/hello/skill/hello.zip"
+          test -s "$ZIP_PATH" || { echo "::error::hello.zip missing or empty"; exit 1; }
+          unzip -l "$ZIP_PATH" | grep -q 'hello/SKILL.md' || { echo "::error::SKILL.md not in zip"; exit 1; }
+          unzip -l "$ZIP_PATH" | grep -q 'hello/scripts/render.py' || { echo "::error::render.py not in zip"; exit 1; }
+          unzip -lv "$ZIP_PATH" | awk '/hello\/scripts\/render.py/ { print $1 }' | grep -q 'rwx' || { echo "::error::render.py is not executable in zip"; exit 1; }
+          unzip -l "$ZIP_PATH" | grep -q '__pycache__' && { echo "::error::__pycache__ found in zip"; exit 1; } || true
+          mkdir -p /tmp/zip-extract
+          unzip -q "$ZIP_PATH" -d /tmp/zip-extract
+          ! grep -rE '<<[A-Z][A-Z0-9_]*>>' /tmp/zip-extract/hello || { echo "::error::sentinel survived in zip"; exit 1; }
+
+  vendored-example:
+    runs-on: ubuntu-latest
+    needs: ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Build decision-tree example
+        run: pnpm --filter=./examples/decision-tree build
+      - name: Test decision-tree example
+        run: pnpm --filter=./examples/decision-tree test
+      - name: Assert zip exists and stays within baseline
+        run: |
+          ZIP_PATH=$(find examples/decision-tree/skill -name 'decision-tree.zip' -print -quit)
+          test -s "$ZIP_PATH" || { echo "::error::decision-tree.zip missing or empty"; exit 1; }
+          BASELINE=$(cat examples/decision-tree/.baseline-size)
+          SIZE=$(wc -c < "$ZIP_PATH")
+          if [ "$SIZE" -gt "$BASELINE" ]; then
+            echo "::error::zip size $SIZE exceeds baseline $BASELINE"
+            exit 1
+          fi
+
+  scaffolder-windows:
+    runs-on: windows-latest
+    needs: ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Run create-visill unit tests on Windows
+        run: pnpm -F create-visill test

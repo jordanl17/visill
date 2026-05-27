@@ -1,0 +1,23 @@
+{
+  "skill_name": "hello-world",
+  "evals": [
+    {
+      "id": "fire-named-greeting",
+      "prompt": "Use the hello-world widget to greet \"world\".",
+      "expected_output": "Skill activates: the prompt asks for the hello-world widget with a concrete name. The model builds a payload of {\"name\": \"world\"}, pipes it through render.py, and calls visualize:show_widget with the rendered bundle. The widget mounts and renders \"Hello, world!\".",
+      "files": []
+    },
+    {
+      "id": "fire-name-inferred-from-context",
+      "prompt": "Show me the visill hello-world widget. My name is Ada.",
+      "expected_output": "Skill activates: the model extracts the name from context, constructs a payload of {\"name\": \"Ada\"}, renders it through scripts/render.py, and invokes visualize:show_widget. The widget renders \"Hello, Ada!\" and exposes the submission button.",
+      "files": []
+    },
+    {
+      "id": "skip-plain-greeting",
+      "prompt": "Hello, how are you today?",
+      "expected_output": "Skill does NOT activate: a conversational greeting is not a request to render a widget. The model replies in plain text without invoking visualize:show_widget.",
+      "files": []
+    }
+  ]
+}

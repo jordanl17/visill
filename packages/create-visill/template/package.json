@@ -1,0 +1,32 @@
+{
+  "name": "<<SKILL_NAME>>",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.4.1",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run tests/widget",
+    "test:evals": "vitest run tests/evals",
+    "lint": "oxlint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "build:zip": "bash scripts/build-zip.sh"
+  },
+  "dependencies": {
+    "visill": "^0.1.0-rc.0"
+  },
+  "devDependencies": {
+    "@visill/build": "^0.1.0-rc.0",
+    "@visill/test": "^0.1.0-rc.0",
+    "jsdom": "^25.0.0",
+    "vitest": "^2.1.8",
+    "oxlint": "^0.15.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2"
+  }
+}

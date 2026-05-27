@@ -5,6 +5,7 @@ node_modules
 dist
 skill/
 !packages/visill-build/test/fixtures/hello.golden/skill/
+packages/create-visill/template-dev/
 
 # Test output
 coverage

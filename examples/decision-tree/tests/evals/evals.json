@@ -1,0 +1,107 @@
+{
+  "skill_name": "decision-tree",
+  "evals": [
+    {
+      "id": "fire-auth-strategy",
+      "prompt": "I'm building a side project in Next.js where users sign up and save personal documents. Audience is technical, maybe 1k users in year one. Help me think through how to handle authentication for this side project - I haven't picked an approach yet.",
+      "expected_output": "Skill activates: the prompt supplies enough context (framework, scale, audience) to clear the 'sufficient context' gate. Variance sketch produces three distinct L1 questions (managed provider feature focus vs framework built-in OAuth mix vs roll-your-own session model). Widget renders with 3 L0 branches each leading to a different next-question.",
+      "files": []
+    },
+    {
+      "id": "fire-micro-saas-ideation",
+      "prompt": "I'm a TypeScript developer with weekend hours free and want to build a small SaaS I'd actually use myself. I've shipped a couple of side projects before so I'm comfortable picking my own stack. Help me figure out what to build.",
+      "expected_output": "Skill activates: bounded ideation with distinct L0 problem-spaces (personal admin vs information overload vs work productivity), each leading to a different L1 friction question.",
+      "files": []
+    },
+    {
+      "id": "fire-store-model",
+      "prompt": "We have an internal content system where every editorial document also has a 'pair' - a translated or localised counterpart. We're adding support for multiple variant drafts (A/B copy, regional spelling tweaks) per document pair, and need to settle on a data model before we touch the schema. How should we model variants in the document pair store?",
+      "expected_output": "Skill activates: architecture decision with three distinct L1 questions (migration strategy vs shim location vs routing criteria) under three meaningfully different L0 approaches.",
+      "files": []
+    },
+    {
+      "id": "fire-weekend-trip",
+      "prompt": "It's my partner's birthday at the end of October and I want to surprise them with a weekend trip from London. Budget around £400 each total. They like food, walking, and quieter places over big cities. Help me plan where to go.",
+      "expected_output": "Skill activates: trip planning with distinct destination categories (coastal vs country vs European city break) leading to different L1 questions per category.",
+      "files": []
+    },
+    {
+      "id": "fire-database-choice",
+      "prompt": "Pick a database for me. We're building a read-heavy product analytics service with ad-hoc queries over the last 90 days of events. Team is 3 backend devs with mostly Postgres experience. We're moving off SQLite because the scale is outgrowing it.",
+      "expected_output": "Skill activates without keyword overlap to the description's example phrasings. Variance produces meaningfully different L1 questions per L0 (e.g. column-store vs document vs relational each leading to different operational concerns).",
+      "files": []
+    },
+    {
+      "id": "fire-monorepo-structure",
+      "prompt": "What's the best way to structure folders for a monorepo containing a Next.js web app, a React Native mobile app, and a shared package layer? Team is 5 devs and we want new joiners to find things fast.",
+      "expected_output": "Skill activates on a 'what's the best way to' phrasing not present in the description. Variance produces different L1 questions across L0 (e.g. feature-based vs layer-based vs platform-based folder strategies).",
+      "files": []
+    },
+    {
+      "id": "fire-windfall-allocation",
+      "prompt": "I just got a £15k bonus and want to use it deliberately rather than letting it disappear. Mid-thirties, no debt, comfortable salary, already have 6 months emergency fund. Considering some mix of investing, home upgrades, and a course or two. Help me figure out how to allocate it.",
+      "expected_output": "Skill activates in a domain (personal finance) not present in the description's example list. Variance produces distinct L1 questions across L0 (e.g. tax-advantaged investing vs property vs skill-building each leading to different next-decisions).",
+      "files": []
+    },
+    {
+      "id": "fire-runtime-strategy",
+      "prompt": "Our Node API is hitting CPU limits at 8k RPS and the roadmap has us 4x'ing traffic over the next 6 months. Team is 4 backend devs, mostly comfortable in Node, some Go familiarity. What's the right move to handle the next traffic tier?",
+      "expected_output": "Skill activates on a 'what's the right move' phrasing. Variance produces different L1 questions across L0 (e.g. scale-up vs scale-out vs language-rewrite each opening different sub-decisions).",
+      "files": []
+    },
+    {
+      "id": "skip-naming-exercise",
+      "prompt": "Help me name this side project.",
+      "expected_output": "Skill does NOT activate: variance check fails because L1 questions all collapse to 'give me 5 options in that style'. Model responds with a flat list.",
+      "files": []
+    },
+    {
+      "id": "skip-flat-recommendation",
+      "prompt": "Recommend me a podcast about software engineering.",
+      "expected_output": "Skill does NOT activate: no branching, no variance. Model returns a recommendation or short list.",
+      "files": []
+    },
+    {
+      "id": "skip-cascading-deps",
+      "prompt": "Walk me through architecting a real-time collaborative editor. I want to think through this end-to-end with you because each choice opens up new questions.",
+      "expected_output": "Skill does NOT activate: each commit opens new question spaces that depend on mid-walk annotations; pre-baked tree cannot capture this. Model responds conversationally.",
+      "files": []
+    },
+    {
+      "id": "skip-open-ended",
+      "prompt": "I don't know what I want to build.",
+      "expected_output": "Skill does NOT activate: no bounded structure yet. Model elicits constraints first.",
+      "files": []
+    },
+    {
+      "id": "skip-conversation-request",
+      "prompt": "I want to talk through this architecture with you, not click buttons.",
+      "expected_output": "Skill does NOT activate: user explicitly prefers conversation over visual selection. Model responds conversationally.",
+      "files": []
+    },
+    {
+      "id": "fire-binary-choice",
+      "prompt": "Should we use REST or GraphQL for our new internal API? We're a small team of 4 backend devs and most data flows are CRUD.",
+      "expected_output": "Skill activates: binary L0 (REST vs GraphQL) with two genuinely different L1 next-questions (REST -> API style; GraphQL -> implementation pattern). 2-4 branches per level is in scope.",
+      "files": []
+    },
+    {
+      "id": "skip-honeymoon-trio",
+      "prompt": "Bali, Thailand, or Vietnam for our 2-week honeymoon in February - which is best? We like food, beaches, and a bit of adventure.",
+      "expected_output": "Skill does NOT activate: looks fire-y (3 distinct L0 destinations) but variance check fails - the L1 question under each L0 collapses to the same shape ('what should we do in that country'). Model responds with a comparative recommendation.",
+      "files": []
+    },
+    {
+      "id": "skip-style-direction",
+      "prompt": "I want our company's brand voice to feel either witty, professional, or playful. Pick one direction and tell me why.",
+      "expected_output": "Skill does NOT activate: looks fire-y (3 distinct L0 style directions) but variance fails - each L1 collapses to 'give me 5 voice samples in that style'. Model responds with a recommendation.",
+      "files": []
+    },
+    {
+      "id": "skip-factual-question",
+      "prompt": "What's the difference between RSA and ECC encryption, and when would you pick one over the other?",
+      "expected_output": "Skill does NOT activate: factual / explanatory question, not a branching decision space. Model explains both algorithms and their trade-offs.",
+      "files": []
+    }
+  ]
+}

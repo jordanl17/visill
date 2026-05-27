@@ -1,0 +1,11 @@
+node_modules/
+skill/
+*-workspace/
+*.zip
+dist/
+.claude/
+.husky/_/
+__pycache__/
+*.pyc
+package-lock.json
+yarn.lock

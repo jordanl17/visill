@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "title": "Hello world widget input",
+  "description": "Payload for the starter visill skill. The widget renders \"Hello, <name>!\" where <name> is the value of the `name` field. Replace this schema with the shape your widget expects.",
+  "type": "object",
+  "required": ["name"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The name to greet. The widget renders \"Hello, <name>!\". One short token, no trailing punctuation."
+    }
+  }
+}

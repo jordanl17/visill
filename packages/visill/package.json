@@ -24,7 +24,7 @@
     "sdk"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsup",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint .",
     "pretest": "tsc -p tsconfig.build.json --emitDeclarationOnly",
@@ -34,6 +34,7 @@
   "devDependencies": {
     "@types/node": "^22.10.0",
     "jsdom": "^25.0.1",
+    "tsup": "^8.3.0",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   }

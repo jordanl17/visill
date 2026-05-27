@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "required": ["topic", "submit_instruction", "tree"],
+  "additionalProperties": false,
+  "properties": {
+    "topic": {
+      "type": "string",
+      "description": "Short label for the decision being made. 2-5 words, lowercase, no trailing period. Examples: 'authentication strategy', 'micro-SaaS ideation', 'weekend trip from London'."
+    },
+    "submit_instruction": {
+      "type": "string",
+      "description": "The instruction Claude runs when the user commits a path. One sentence, imperative, naming the artifact to produce. Example: 'Turn this into a one-page idea brief: problem, value, MVP scope, key technical decisions, biggest risk.'"
+    },
+    "tree": {
+      "type": "object",
+      "required": ["question", "basis", "branches"],
+      "additionalProperties": false,
+      "properties": {
+        "question": {
+          "type": "string",
+          "description": "The L0 question. Short and conversational, ends with '?'. Frames the top-level decision."
+        },
+        "basis": {
+          "type": "string",
+          "description": "One sentence explaining why this question is the right starting point for the topic."
+        },
+        "branches": {
+          "type": "array",
+          "description": "L0 branches. 2 to 4 entries, each meaningfully different from the others. The L1 question under each branch must be a different question, not the same question with different filters. Same 2-4 range applies at L1 and L2 (set in each branch's 'sub.branches').",
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "summary"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Kebab-case identifier, unique within its parent branches array."
+              },
+              "title": {
+                "type": "string",
+                "description": "3 to 5 words. The branch's own framing, not its parent's."
+              },
+              "summary": {
+                "type": "string",
+                "description": "One to two sentences. For L2 leaves, concrete and committable - name the specific pattern, tool, or approach, do not describe abstractly."
+              },
+              "next_hint": {
+                "description": "Short phrase describing what the next decision under this branch explores. Set to null for L2 leaves."
+              },
+              "sub": {
+                "description": "Nested decision under this branch, same shape as 'tree'. Set to null for L2 leaves. Max tree depth: L0 -> L1 -> L2."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="./widget.css" />
+
+<h2
+  class="sr-only"
+  style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0)"
+>
+  Decision tree navigator. Pre-baked tree embedded below. Walk to a leaf, commit, the brief sends
+  back to chat.
+</h2>
+
+<div style="padding: 1rem 0">
+  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px">
+    <i
+      class="ti ti-git-branch"
+      style="font-size: 20px; color: var(--color-text-secondary)"
+      aria-hidden="true"
+    ></i>
+    <h3 style="margin: 0">Decision navigator</h3>
+  </div>
+  <p style="margin: 0 0 1.25rem; color: var(--color-text-secondary); font-size: 14px">
+    {{topic}}. Walk to a leaf, then commit and the brief sends back to chat.
+  </p>
+
+  <div id="tree"></div>
+</div>
+
+<script id="navigator-data" type="application/json">
+  {
+    "topic": {{{topic_json}}},
+    "submit_instruction": {{{submit_instruction_json}}},
+    "tree": {{{tree_json}}}
+  }
+</script>
+
+<script type="module" src="./widget.ts"></script>

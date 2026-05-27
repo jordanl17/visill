@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="./widget.css" />
+
+<h2
+  class="sr-only"
+  style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0)"
+>
+  <<SKILL_TITLE>> widget.
+</h2>
+
+<div style="padding: 1rem 0">
+  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px">
+    <h3 style="margin: 0"><<SKILL_TITLE>></h3>
+  </div>
+
+  <div id="root"></div>
+</div>
+
+<!-- render.py substitutes {{{name_json}}} with the JSON-encoded `name` value from the skill payload. The widget reads this data island and renders the greeting. -->
+<script id="root-data" type="application/json">
+  {
+    "name": {{{name_json}}}
+  }
+</script>
+
+<script type="module" src="./widget.ts"></script>
