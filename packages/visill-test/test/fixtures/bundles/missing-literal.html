@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Test Bundle</title></head>
+<body>
+<h1>{{topic}}</h1>
+<script id="test-data" type="application/json">{{{topic_json}}}</script>
+<script type="module">
+// widget code
+const submitPrompt = (text) => { console.log(text) }
+submitPrompt('hello')
+</script>
+</body>
+</html>

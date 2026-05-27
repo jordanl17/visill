@@ -34,8 +34,8 @@ Cross-cutting constraints | 0022+ | as needed
 | 0011 | Skill-name resolution precedence | 3 | Accepted |
 | 0012 | `render.py` JSON-island encoding (`</` neutralisation, `_json` siblings) | 4 | Accepted |
 | 0013 | Vendored chevron strategy | 4 | Accepted |
-| 0014 | Bundle-test preset shape | 5 | Pending |
-| 0015 | Render-test via Python subprocess | 5 | Pending |
+| 0014 | Bundle-test preset shape | 5 | Accepted |
+| 0015 | Render-test via Python subprocess | 5 | Accepted |
 | 0016 | Scaffolder single-prompt UX | 6 | Pending |
 | 0017 | Vendored example as integration gate | 6 | Pending |
 | 0018 | Opinionated lockfile policy in template | 6 | Pending |
