@@ -3,8 +3,6 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-pnpm build
-
 SKILL_DIR=$(find skill -mindepth 1 -maxdepth 1 -type d | head -n 1)
 SKILL_NAME=$(basename "${SKILL_DIR}")
 

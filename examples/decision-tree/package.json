@@ -7,7 +7,7 @@
     "node": ">=20.11.0"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && pnpm build:zip",
     "dev": "vite",
     "build:zip": "./scripts/build-zip.sh",
     "type-check": "tsc --noEmit",

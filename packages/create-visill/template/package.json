@@ -8,7 +8,7 @@
     "node": ">=20.11.0"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "vite build && pnpm build:zip",
     "test": "vitest run tests/widget",
     "test:evals": "vitest run tests/evals",
     "lint": "oxlint .",
