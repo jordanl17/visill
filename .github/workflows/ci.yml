@@ -60,7 +60,7 @@ jobs:
           test -s "$ZIP_PATH" || { echo "::error::hello.zip missing or empty"; exit 1; }
           unzip -l "$ZIP_PATH" | grep -q 'hello/SKILL.md' || { echo "::error::SKILL.md not in zip"; exit 1; }
           unzip -l "$ZIP_PATH" | grep -q 'hello/scripts/render.py' || { echo "::error::render.py not in zip"; exit 1; }
-          unzip -lv "$ZIP_PATH" | awk '/hello\/scripts\/render.py/ { print $1 }' | grep -q 'rwx' || { echo "::error::render.py is not executable in zip"; exit 1; }
+          unzip -Z "$ZIP_PATH" | grep 'hello/scripts/render.py' | grep -q 'rwx' || { echo "::error::render.py is not executable in zip"; exit 1; }
           unzip -l "$ZIP_PATH" | grep -q '__pycache__' && { echo "::error::__pycache__ found in zip"; exit 1; } || true
           mkdir -p /tmp/zip-extract
           unzip -q "$ZIP_PATH" -d /tmp/zip-extract
