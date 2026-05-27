@@ -50,8 +50,54 @@ Mirrors the design doc's Architecture layout exactly. File list:
 - `vite.config.ts` - ~5 lines using `defineVisillConfig` from `@visill/build`
 - `visill.config.ts`
 - `package.json` - `"packageManager": "pnpm@10.x.y"`, `"engines": {"node": ">=20.11.0"}`
-- `.gitignore` - includes `skill/`, `node_modules`, `package-lock.json`, `yarn.lock`
-- `.prettierignore` - covers `skill/` whole dir, `_vendor/`
+- `.gitignore` - canonical pattern set lifted from the three existing skill repos:
+  ```
+  node_modules/
+  skill/
+  *-workspace/
+  *.zip
+  dist/
+  .claude/
+  .husky/_/
+  __pycache__/
+  *.pyc
+  package-lock.json
+  yarn.lock
+  ```
+- `.prettierignore` - lifted from the three skills, plus the lockfile policy:
+  ```
+  node_modules/
+  skill/
+  *-workspace/
+  dist/
+  pnpm-lock.yaml
+  CHANGELOG.md
+  ```
+- `.oxlintrc.json` - mirrors the canonical config used by all three existing skills:
+  ```json
+  {
+    "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+    "categories": {
+      "correctness": "error",
+      "perf": "warn",
+      "restriction": "off",
+      "style": "off",
+      "suspicious": "warn"
+    },
+    "rules": {
+      "no-unused-vars": "warn",
+      "eqeqeq": "error",
+      "no-debugger": "error",
+      "no-console": "off"
+    },
+    "ignorePatterns": [
+      "node_modules/",
+      "skill/*/assets/widget-bundled.html",
+      "*-workspace/",
+      "dist/"
+    ]
+  }
+  ```
 - `release-please-config.json`, `.release-please-manifest.json`
 - `README.md`, `LICENSE`
 
@@ -87,7 +133,7 @@ Per-template-file source:
 | `vite.config.ts` | new - thin `defineVisillConfig` call |
 | `visill.config.ts` | new |
 | `package.json`, `release-please-config.json` | decision-tree shape |
-| `.gitignore`, `.prettierignore` | decision-tree + opinionated lockfile additions |
+| `.gitignore`, `.prettierignore`, `.oxlintrc.json` | the three skills' canonical patterns (see section 3 for the full enumeration), plus the lockfile policy from ADR 0018 |
 
 ## 5. Scaffolder behaviour spec
 

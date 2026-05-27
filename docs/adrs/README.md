@@ -38,7 +38,7 @@ Cross-cutting constraints | 0022+ | as needed
 | 0015 | Render-test via Python subprocess | 5 | Accepted |
 | 0016 | Scaffolder single-prompt UX | 6 | Pending |
 | 0017 | Vendored example as integration gate | 6 | Pending |
-| 0018 | Opinionated lockfile policy in template | 6 | Pending |
+| 0018 | Template-shipped lockfile and ignore policy | 6 | Pending |
 | 0019 | RC publish via Changesets prereleases | 7 | Pending |
 | 0020 | Migration branch + `pnpm.overrides link:` strategy | 8 | Pending |
 | 0021 | Parity gates for migration PRs | 8 | Pending |
