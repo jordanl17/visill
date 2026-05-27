@@ -4,9 +4,13 @@ High-level phase overview. Detailed PRDs live in `docs/prds/`. Rationale lives i
 
 ## Progress
 
-- **Phase 0 - Shipped 2026-05-27.** Direct push to `main` on both affected repos. TF @ `e9894d9`, LE @ `0863044`. See PRD 000.
-- **Phase 1 - Ready.** Unblocked by Phase 0; next pickup. See PRD 001.
+- **Phase 0 - Shipped 2026-05-27.** Direct push to `main` on both affected external repos. TF @ `e9894d9`, LE @ `0863044`. See PRD 000.
+- **Phase 1 - Shipped 2026-05-27.** Direct push to `main` on the visill repo at `jordanl17/visill` (public). Commit `cb31904`; first CI run green in 17s. See PRD 001.
 - **Phases 2-10 - Proposed.** PRDs drafted, awaiting upstream phases.
+
+## Repo
+
+The visill monorepo lives at `github.com:jordanl17/visill` (public). The default branch is `main`; `origin` is configured. Phase 1 set this up; later phases push direct to `main` per the playbook unless a phase declares otherwise.
 
 ## At a glance
 

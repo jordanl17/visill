@@ -1,8 +1,22 @@
 # PRD 001 - Phase 1: Monorepo Skeleton
 
-Status: Ready (Phase 0 shipped 2026-05-27 - this phase is unblocked and is the next pickup)
+Status: Shipped 2026-05-27. Direct push to `main` at `jordanl17/visill` (public). Initial commit `cb31904`; Node 22 bump follow-up landed in the same session. Unblocks Phases 2-6.
 Owner: jordan.lawrence@sanity.io
 Date: 2026-05-27
+
+## Delivery
+
+- Scaffold commit: `cb31904 chore: scaffold visill monorepo skeleton` - 40 files, 1567 insertions.
+- First CI run on `main`: green in 17s (build/lint/test/prettier all pass on Node 22).
+- Visill repo: `github.com:jordanl17/visill` (public). `origin` was already configured at session start; the local `main` was tracking a stale `origin/master` reference, which the push to `origin/main` resolved.
+- NPM_TOKEN setup deferred to Phase 7 per [ADR 0002](../adrs/0002-monorepo-with-changesets.md) and [PRD 007](007-phase-7-10-release-and-migration.md).
+
+## Lessons learned
+
+- **Verify remote state before assuming it.** The handoff doc said visill had no GitHub remote yet; in fact `jordanl17/visill` existed and `origin` was configured. Always run `git remote -v` and `gh repo view` before drafting delivery questions about repo setup.
+- **Node version bump caught by CI annotation, not by gate.** GitHub Actions surfaced a deprecation note that the actions internally still run on Node 20 (forced upgrade June 2026). We bumped our runtime to Node 22 (current active LTS) in the same session; the action versions themselves remain on v4, which is fine.
+- **Prettier with `semi: false` will rewrite scaffolded files.** Sub-agents that emit `export {};` produce a prettier diff. Run `pnpm prettier --write .` once during wrap-up rather than re-prompting agents.
+- **Coordinator-owned ADR cross-link fix.** A sub-agent wrote `docs/README.md` before the ADR files existed and pointed every ADR link at the index. The Wave 1 review caught it; the coordinator fixed it in-thread. Future scaffold phases should sequence the index after the linked files exist, or pass `--exists-check` instructions to the index author.
 
 ## 1. Goal
 

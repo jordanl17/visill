@@ -22,7 +22,7 @@ Open these before starting:
 
 ## Execution shape
 
-Every phase follows the same five-stage flow. Each stage has a checkpoint where the session pauses for human input.
+Every phase follows the same seven-stage flow. Stages 1-3 take human input; Stages 5-7 run autonomously once started. Stage 4 fans out to parallel sub-agents.
 
 ### Stage 1: Confirm scope
 
@@ -116,6 +116,26 @@ Runs after the user authorizes delivery (push or PR) for a phase. Also autonomou
 
 5. **Escalation.** Stop and ask the user when the recovery loop iterates twice without going green. Two failed fix attempts signals that the diagnosis is wrong, not that the next attempt will land.
 
+### Stage 7: Phase handoff
+
+Runs once Stage 6 reports green and the phase is complete. The goal is to leave a clean baton for whoever picks up the next phase, whether that is a fresh session or a different teammate.
+
+1. **Compose the phase summary.** Tight 5-8 line summary: what shipped, what was deferred, the commit SHA(s) per affected repo, what unblocks downstream phases, any open questions to carry forward. Pull from the Stage 5 phase report; expand only on items that need next-session context.
+
+2. **Run `/handoff`.** Invoke the `handoff` skill to compact the current conversation into a handoff document. The skill writes to a `/tmp/handoff-<topic>-<date>.md` file by default; capture the absolute path it returns. This file is the source of truth for the next session.
+
+3. **Update durable artefacts.** Update `docs/ROADMAP.md` Progress section to mark the phase shipped (date, commit SHAs, delivery mode). Update the phase PRD's Status to `Shipped` and append a Delivery section plus Lessons-learned section that capture anything surprising. These survive in git; `/tmp/handoff-*.md` does not.
+
+4. **Update memory.** Save a project memory recording the phase outcome (use the same naming pattern as `project_phase_0_shipped.md`). Save a feedback memory for any process learning that should not repeat. Update `MEMORY.md` to index the new entries.
+
+5. **Final message.** Write a closing assistant message that:
+   - Names the absolute path to the `/tmp/handoff-*.md` file produced by step 2.
+   - Summarises the phase outcome in 3-5 bullets covering delivery commit, CI status, downstream unblocks, and any unresolved items.
+   - Names the next phase by number and PRD path (e.g. "Next: Phase 2 - `docs/prds/002-phase-2-visill-sdk.md`").
+   - Tells the next agent to read the handoff file first, then the next phase's PRD, then re-enter this playbook at Stage 1 for that phase.
+
+6. **Stop.** The session ends here. Do not start the next phase in the same session unless the user explicitly asks; a fresh session preserves the handoff boundary.
+
 ## Constraints that apply to every phase
 
 These come from global `CLAUDE.md` and from locked design decisions. Sub-agents must respect them.
@@ -165,14 +185,17 @@ Each phase PRD encodes its own success criteria. The phase is complete when:
 ## Quickstart for a new session
 
 ```
-1. Read docs/prds/00N-phase-N-<slug>.md
-2. Read docs/PHASE-PLAYBOOK.md (this file)
-3. Skim docs/adrs/README.md
-4. Skim global CLAUDE.md (auto-loaded)
-5. Ask user: "Confirm scope for Phase N? Or any deviations?"
-6. Spawn breakdown sub-agent
-7. TaskCreate from breakdown
-8. TaskList + present plan to user
-9. Execute (parallelize where safe, gate on diffs, never stage)
-10. Verify success criteria + report
+1. Read /tmp/handoff-*.md if a prior session left one (look for the latest visill handoff)
+2. Read docs/prds/00N-phase-N-<slug>.md
+3. Read docs/PHASE-PLAYBOOK.md (this file)
+4. Skim docs/adrs/README.md
+5. Skim global CLAUDE.md (auto-loaded)
+6. Ask user: "Confirm scope for Phase N? Or any deviations?"
+7. Spawn breakdown sub-agent
+8. TaskCreate from breakdown
+9. TaskList + present plan to user
+10. Execute (parallelize where safe, gate on diffs, never stage)
+11. Verify success criteria + Stage 5 local commit
+12. Push on user authorisation; Stage 6 babysits CI
+13. Stage 7: run /handoff, update ROADMAP + PRD, write final message naming the next phase
 ```
