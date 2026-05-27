@@ -130,11 +130,15 @@ Runs once Stage 6 reports green and the phase is complete. The goal is to leave 
 
 4. **Update memory.** Save a project memory recording the phase outcome (use the same naming pattern as `project_phase_0_shipped.md`). Save a feedback memory for any process learning that should not repeat. Update `MEMORY.md` to index the new entries.
 
-5. **Final message.** Write a closing assistant message that:
-   - Names the absolute path to the `/tmp/handoff-*.md` file produced by step 2.
-   - Summarises the phase outcome in 3-5 bullets covering delivery commit, CI status, downstream unblocks, and any unresolved items.
-   - Names the next phase by number and PRD path (e.g. "Next: Phase 2 - `docs/prds/002-phase-2-visill-sdk.md`").
-   - Tells the next agent to read the handoff file first, then the next phase's PRD, then re-enter this playbook at Stage 1 for that phase.
+5. **Final message - written for the next agent, not the current user.** The closing assistant message is a self-contained brief that the user can paste verbatim into a fresh Claude Code session to kick off the next phase. Do not write it as a recap to the current user. Address it to the next agent: state the outcome it inherits, the artefacts it needs to read, and the action it should take first. The current user is the courier; the audience is the next session.
+
+   Structure:
+   - **Lead:** "Pick up visill Phase N." One line. No preamble.
+   - **Pointers (absolute paths):** the `/tmp/handoff-*.md` from step 2, the next phase's PRD path, and `docs/PHASE-PLAYBOOK.md` with the re-entry stage (always Stage 1 for a new phase).
+   - **Inherited state (3-5 bullets):** what just shipped (commit SHAs + CI status), what is unblocked, what is carried forward into the next phase as known inputs. Keep tight; the handoff doc has the full context.
+   - **First action for the next agent:** one sentence naming what to do in its first turn (typically: read the handoff, then the PRD's relevant section, then re-enter the playbook at Stage 1 to confirm scope).
+
+   The block should be ready to copy-paste as the initial prompt of the next session. Do not add framing for the current user ("Phase N done!", "Want me to..."); state the outcome inside the brief and stop.
 
 6. **Stop.** The session ends here. Do not start the next phase in the same session unless the user explicitly asks; a fresh session preserves the handoff boundary.
 
