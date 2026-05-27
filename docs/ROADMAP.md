@@ -8,7 +8,7 @@ High-level phase overview. Detailed PRDs live in `docs/prds/`. Rationale lives i
 - **Phase 1 - Shipped 2026-05-27.** Direct push to `main` on the visill repo at `jordanl17/visill` (public). Commit `cb31904`; first CI run green in 17s. See PRD 001.
 - **Phase 2 - Shipped 2026-05-27.** Direct push to `main`. Commit `d6987de`; CI green in 18s. The `visill` package now ships the seven SDK exports plus ADR 0009. Unblocks Phase 3 (build tooling) and Phase 6 (scaffolder template imports). See PRD 002.
 - **Phase 3 - Shipped 2026-05-27.** Direct push to `main`. Commit `7012a3e`; CI green in 25s. `@visill/build` ships the four-export surface (`finalizeBundle`, `assembleSkill`, `resolveSkillName`, `defineVisillConfig`) plus ADRs 0010 and 0011. 18/18 tests cover the golden-tree diff, the `widget-bundled.html` structural rules, the `sizeLimit` overflow, two-run determinism, and `resolveSkillName` precedence. Unblocks Phase 5 (`@visill/test`) and Phase 6 (`create-visill` template wiring + migration). See PRD 003.
-- **Phases 4-10 - Proposed.** PRDs drafted, awaiting upstream phases.
+- **Phases 5-10 - Proposed.** PRDs drafted, awaiting upstream phases.
 
 ## Repo
 

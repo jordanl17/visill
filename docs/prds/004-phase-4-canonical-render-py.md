@@ -1,6 +1,6 @@
 # PRD 004 - Phase 4: Canonical `render.py` + Vendored Chevron
 
-Status: Proposed
+Status: Shipped
 Owner: jordan.lawrence@sanity.io
 Date: 2026-05-27
 
@@ -141,3 +141,22 @@ Rationale: the three existing skills use none of the excluded keywords. Supporti
 - Should we vendor `jsonschema` (or a slim equivalent) to widen validator coverage to `anyOf` / `pattern` / `format`? LE and DT roll their own, and the three existing skills do not need the extras. Lean: keep rolling our own until a fourth skill shows a real need.
 - Should `render.py` accept a `--schema` / `--template` override flag for local development, or stay strictly path-derived? Lean: stay strict; local dev runs through `vite` plus a fixture loader.
 - Should the `.gitignore` live at `scripts/` or at `skill-src/`? Lean: `scripts/` keeps the rule next to what it protects.
+
+## 13. Delivery
+
+Shipped 2026-05-27 via direct push to `main` on `jordanl17/visill`. Commit `d69aa98`; CI green on the push. A follow-up `6f65027` records that the `NPM_TOKEN` repo secret was provisioned the same day, ahead of Phase 7's token gate.
+
+- Deliverables landed exactly as PRD §3 specifies: canonical `render.py` (126 lines), `.gitignore` (two lines), six-file vendored chevron 0.13.1 under `_vendor/chevron/` with full upstream MIT LICENSE preserved. ADRs 0012 and 0013 Accepted; `docs/adrs/README.md` index updated.
+- Validator surface matches PRD §6 exactly: `type`, `required`, `properties`, `additionalProperties: false`, `items`, `minItems`, `enum`. Nothing more. DT's `validate_tree_depth` left out as planned.
+- `renderer.py` lifted from DT (the `scope == 0` fix), the other four chevron files from LE (clean copy, no `__pycache__`). Byte-equality with sources verified.
+- End-to-end smoke tested in `/tmp/visill-render-smoke-post/` against a representative `schema.json` plus `template.mustache`: valid payload renders with `<\/script>` neutralisation in the JSON island, empty stdin exits 1 with `usage:`, missing-required exits 1 with the `render.py: root: missing required property '...'` shape, `_json`-suffixed payload keys do not double-derive.
+- Workspace quality gate clean pre- and post-simplifier: 23 visill tests, 18 visill-build tests, lint, typecheck, build all green.
+
+## 14. Lessons learned
+
+- **No-negation rule polices Python `is False` too.** Sub-agents reflexively reach for `isinstance(x, T) is False` as a "compliant" way to invert a check. It is still a negation, just dressed up. Inverting the guard's body (return early on the positive case, fall through to the failure call) reads cleaner and matches the rule's spirit. Caught in review; fixed by hand before commit.
+- **Module-level constants beat per-call dict literals.** The simplifier hoisted `JSON_TYPE_MAP` out of `check_type`; the map never changes between calls and rebuilding it on every recursive `validate` invocation was wasted work. Future Python helpers in the template: surface invariants as module-level constants by default.
+- **Treat `additionalProperties: false` literal as a value, not a negation.** `schema.get('additionalProperties') is False` is a sentinel comparison against the JSON-Schema literal value `false`; it is not the negation rule's target. The simplifier flagged and correctly rejected the alternative rewrites.
+- **PRD ↔ ADR drift caught by the index.** PRD 004 §3 named "ADR 0011" and "ADR 0012" for this phase. The canonical numbers per `docs/adrs/README.md` are 0012 + 0013. The index won, as the README declares. Worth re-reading the drift table at the top of every phase.
+- **Neither predecessor skill carried the chevron LICENSE.** A correctness item that surfaced at Stage 1, fetched verbatim from the upstream 0.13.1 tag during Wave 1. Worth flagging at Phase 6 when the scaffolder copy logic lands: assert LICENSE presence in the rendered tree.
+- **Watch the README collision when two ADRs land in the same wave.** ADRs 0012 and 0013 both edit a row in `docs/adrs/README.md`. The breakdown agent flagged it and serialised 0013 behind 0012; the cost was one extra wave for one extra parallel review. Worth recording as a future pattern: same-file edits across "parallel" tasks need explicit `blockedBy`.
