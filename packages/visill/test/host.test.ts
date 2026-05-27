@@ -1,4 +1,6 @@
-import { sendPrompt } from './host'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { sendPrompt } from '../src/host'
 
 describe('sendPrompt', () => {
   const originalSendPrompt = globalThis.sendPrompt

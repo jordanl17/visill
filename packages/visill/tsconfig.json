@@ -6,8 +6,8 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "declarationMap": true,
     "sourceMap": true,
-    "types": ["vitest/globals", "node"]
+    "types": ["node"]
   },
   "include": ["src"],
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules", "test"]
 }

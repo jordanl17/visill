@@ -1,4 +1,6 @@
-import { readDataIsland } from './data-island'
+import { beforeEach, describe, expect, test } from 'vitest'
+
+import { readDataIsland } from '../src/data-island'
 
 describe('readDataIsland', () => {
   beforeEach(() => {

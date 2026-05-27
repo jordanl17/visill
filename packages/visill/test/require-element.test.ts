@@ -1,4 +1,6 @@
-import { requireElement } from './require-element'
+import { beforeEach, describe, expect, test } from 'vitest'
+
+import { requireElement } from '../src/require-element'
 
 describe('requireElement', () => {
   beforeEach(() => {

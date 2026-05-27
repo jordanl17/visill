@@ -1,4 +1,6 @@
-import { ownDescendant } from './own-descendant'
+import { beforeEach, describe, expect, it } from 'vitest'
+
+import { ownDescendant } from '../src/own-descendant'
 
 describe('ownDescendant', () => {
   beforeEach(() => {

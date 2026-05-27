@@ -1,4 +1,6 @@
-import { buildPrompt } from './prompt'
+import { describe, expect, test } from 'vitest'
+
+import { buildPrompt } from '../src/prompt'
 
 describe('buildPrompt', () => {
   test('filters out null and undefined entries', () => {

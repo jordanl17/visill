@@ -27,7 +27,7 @@
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint .",
-    "pretest": "tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "pretest": "tsc -p tsconfig.json --emitDeclarationOnly",
     "test": "vitest run"
   },
   "dependencies": {},

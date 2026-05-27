@@ -1,4 +1,6 @@
-import { delegate } from './delegate'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+
+import { delegate } from '../src/delegate'
 
 describe('delegate', () => {
   beforeEach(() => {

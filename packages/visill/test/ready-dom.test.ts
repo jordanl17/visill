@@ -1,4 +1,6 @@
-import { readyDOM } from './ready-dom'
+import { describe, expect, test, vi } from 'vitest'
+
+import { readyDOM } from '../src/ready-dom'
 
 function stubReadyState(value: DocumentReadyState): () => void {
   Object.defineProperty(document, 'readyState', {
