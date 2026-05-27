@@ -18,11 +18,12 @@ function main(): void {
   const { name } = readDataIsland<RootData>('root-data')
   const rootContainer = requireElement<HTMLElement>('#root')
 
-  const greeting = `Hello, ${escapeHtml(name)}!`
+  const greeting = `Hello, ${name}!`
+  const safeGreeting = `Hello, ${escapeHtml(name)}!`
 
   rootContainer.innerHTML = `
     <div class="root">
-      <p class="body">${greeting}</p>
+      <p class="body">${safeGreeting}</p>
       <button id="send-greeting" type="button">Send greeting to chat</button>
     </div>
   `
