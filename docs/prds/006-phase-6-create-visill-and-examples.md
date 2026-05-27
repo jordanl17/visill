@@ -1,6 +1,25 @@
 # Phase 6 - create-visill scaffolder, canonical template, vendored decision-tree example
 
-Status: Proposed. Owner: jordan.lawrence@sanity.io. Date: 2026-05-27.
+Status: Shipped with follow-up (Phase 6.1). Owner: jordan.lawrence@sanity.io. Date: 2026-05-27.
+
+## Delivery
+
+Two commits on `main`:
+
+- `25410f8` (feat): create-visill scaffolder, canonical template, vendored decision-tree integration gate, tsup ESM migration for visill/visill-build/visill-test, ADRs 0016/0017/0018/0023 Accepted.
+- `63c4f19` (fix(ci)): build workspace SDK before scaffolder smoke + example gates.
+
+CI: `ci`, `scaffolder-windows` green. `scaffolder-smoke` and `vendored-example` red on `main` post-push; root cause is two Phase 3 / Phase 1 design gaps that the integration gate surfaced exactly as ADR 0017 promised. Phase 6.1 (`docs/prds/006.1-phase-6.1-config-helpers-and-test-layout.md`) closes both gaps.
+
+Local quality gate verified pre-commit: 155 tests passing across all packages plus the vendored example. Prepublish guard rejects `workspace:` and surviving sentinels. Scaffolder produces a clean `hello/` tree end-to-end (no sentinel survivors).
+
+## Lessons learned
+
+- **The integration gate works.** ADR 0017 promised the vendored example would surface SDK / plugin / contract drift before publish. It surfaced two: `defineVisillConfig` incomplete defaults (Phase 3 gap) and workspace ESM resolution under tsc (workspace-wide bug fixed by tsup migration mid-phase, ADR 0023). Both bugs would have shipped to downstream consumers without this gate.
+- **Data-contract redesign mid-phase.** Initial wave produced an incoherent contract (`message` vs `greeting` vs `name` across schema / widget / SKILL.md / evals). Audit + rename to `name` + new Data flow section in SKILL.md taught the layer separation. Future phases should produce the contract spec BEFORE fanning out template content waves.
+- **Sub-agent harness fan-out scales.** 25 parallel sub-agents in Wave B-H ran cleanly; reconciliation took one consolidated review sub-agent + a focused remediation sub-agent. No coordinator-side merge conflicts because the task graph kept file sets disjoint.
+- **Zip-size baseline is delivery bytes, not LLM context.** The 29745-byte baseline reflects framework content + Phase 4 canonical scripts + extra references vs the 19499-byte upstream. Per user guidance, the prosperity metric is SKILL.md + references/ size (~28KB current); the zip assertion is a coarse delivery-bytes proxy. Phase 7+ should add explicit LLM-context tracking.
+- **Stop-and-ask escalation matters.** After two failed CI recovery attempts, escalating to the user (per playbook Stage 6 step 5) surfaced design-level concerns that would have spiraled if pursued in the recovery loop. Phase 6.1 captures the cleaner fix shape.
 
 ## 1. Goal
 

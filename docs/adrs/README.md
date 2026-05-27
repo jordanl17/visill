@@ -44,6 +44,7 @@ Cross-cutting constraints | 0022+ | as needed
 | 0021 | Parity gates for migration PRs | 8 | Pending |
 | 0022 | Evals run locally only, never in CI | 6 | Pending |
 | 0023 | tsup for ESM dist emission | 6 | Accepted |
+| 0024 | Tests separated from source | 6.1 | Accepted |
 
 ## PRD ↔ ADR drift to fix at authoring time
 
