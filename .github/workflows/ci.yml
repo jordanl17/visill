@@ -33,8 +33,8 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - name: Build create-visill
-        run: pnpm -F create-visill build
+      - name: Build workspace SDK packages
+        run: pnpm -F visill -F @visill/build -F @visill/test -F create-visill build
       - name: Materialise template-dev
         run: node packages/create-visill/scripts/build-template.mjs
       - name: Scaffold hello skill and build it against local packages
@@ -77,6 +77,8 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - name: Build workspace SDK packages
+        run: pnpm -F visill -F @visill/build -F @visill/test build
       - name: Build decision-tree example
         run: pnpm --filter=./examples/decision-tree build
       - name: Test decision-tree example
