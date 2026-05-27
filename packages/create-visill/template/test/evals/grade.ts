@@ -168,7 +168,7 @@ const main = (): void => {
     gradeIteration(iterationDir)
     return
   }
-  console.error('Usage: pnpm tsx tests/evals/grade.ts <iteration-dir>')
+  console.error('Usage: pnpm tsx test/evals/grade.ts <iteration-dir>')
   process.exit(1)
 }
 

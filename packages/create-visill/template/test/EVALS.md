@@ -13,7 +13,7 @@ Four test surfaces, in order of increasing effort. Pick the right one for the ch
 
 ## Surface 1: Vitest unit + integration suite
 
-Run with `pnpm test`. Three files in [`tests/widget/`](widget/):
+Run with `pnpm test`. Three files in [`test/widget/`](widget/):
 
 - [`bundle.test.ts`](widget/bundle.test.ts) - static checks against the built `widget-bundled.html`: the inlined `<script>` declares `type="module"`, the chevron runtime slot tokens are preserved, the inline `#root-data` script tag is present, critical string literals survive terser, the bundle stays under the size budget.
 - [`widget.test.ts`](widget/widget.test.ts) - jsdom-based runtime checks: spawns `python3 render.py` with a fixture payload piped via stdin, captures the rendered bundle, re-injects the module script as a plain `<script>` so jsdom executes it, then exercises interactions and verifies `sendPrompt` is called with the right payload.
@@ -27,25 +27,25 @@ Runs on every PR via `.github/workflows/build.yml`. Also runs in the release wor
 
 ## Surface 2: Manual trigger walkthrough
 
-The checklist lives at [`tests/trigger-cases.md`](trigger-cases.md). Type each prompt into a fresh Claude Code session in an unrelated directory. The activate-or-skip decision is observable in CC's output (does it read `SKILL.md`, reference `assets/widget-bundled.html`, attempt `show_widget`?).
+The checklist lives at [`test/trigger-cases.md`](trigger-cases.md). Type each prompt into a fresh Claude Code session in an unrelated directory. The activate-or-skip decision is observable in CC's output (does it read `SKILL.md`, reference `assets/widget-bundled.html`, attempt `show_widget`?).
 
 Use this as a quick sanity check whenever you touch the description.
 
 ## Surface 3: Programmatic eval suite
 
-Scaffold lives in [`tests/evals/`](evals/). Each iteration:
+Scaffold lives in [`test/evals/`](evals/). Each iteration:
 
 1. **Pick an iteration number** (last one is in `hello-world-workspace/iteration-N`).
-2. **Read [`tests/evals/orchestrator.md`](evals/orchestrator.md).** It has the setup commands and the two prompt templates (with_skill + baseline). A Claude Code agent spawns N background subagents in one Agent-tool batch and the system notifies on each completion.
+2. **Read [`test/evals/orchestrator.md`](evals/orchestrator.md).** It has the setup commands and the two prompt templates (with_skill + baseline). A Claude Code agent spawns N background subagents in one Agent-tool batch and the system notifies on each completion.
 3. **Run** the eval suite via `pnpm test:evals` (or the orchestrator-driven flow for the full with_skill / baseline comparison).
 4. **Grade** when all subagent runs are done:
    ```bash
-   pnpm tsx tests/evals/grade.ts hello-world-workspace/iteration-N
+   pnpm tsx test/evals/grade.ts hello-world-workspace/iteration-N
    ```
    Writes `grading.json` per run with `{expectations: [...], summary: {pass_rate, ...}}`. Each assertion is programmatic (regex/string match against the widget HTML or response text).
 5. **Build a visual review:**
    ```bash
-   pnpm tsx tests/evals/build_preview.ts hello-world-workspace/iteration-N
+   pnpm tsx test/evals/build_preview.ts hello-world-workspace/iteration-N
    open hello-world-workspace/iteration-N/eval-preview.html
    ```
    Shows each widget rendered inline with design-system fallbacks, alongside the grading. Per-scenario feedback textareas auto-save to localStorage; the "Copy feedback JSON" sticky button exports the payload.
@@ -92,4 +92,4 @@ Surface 1 / Surface 2 as proxies for trigger precision.
 - snapshot copies of the skill (`skill-snapshot-iter-N/`)
 - the eval-preview.html that `build_preview.ts` writes
 
-Nothing in this directory needs to be committed. The scaffolding in `tests/evals/` is what's reproducible.
+Nothing in this directory needs to be committed. The scaffolding in `test/evals/` is what's reproducible.

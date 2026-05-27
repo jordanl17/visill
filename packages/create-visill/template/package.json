@@ -9,8 +9,8 @@
   },
   "scripts": {
     "build": "vite build && pnpm build:zip",
-    "test": "vitest run tests/widget",
-    "test:evals": "vitest run tests/evals",
+    "test": "vitest run test/widget",
+    "test:evals": "vitest run test/evals",
     "lint": "oxlint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

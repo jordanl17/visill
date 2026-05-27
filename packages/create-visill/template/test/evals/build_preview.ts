@@ -3,10 +3,10 @@
  * with design-system fallbacks injected, alongside its grading summary.
  *
  * Usage:
- *   pnpm tsx tests/evals/build_preview.ts <iteration-dir>
+ *   pnpm tsx test/evals/build_preview.ts <iteration-dir>
  *
  * Example:
- *   pnpm tsx tests/evals/build_preview.ts hello-world-workspace/iteration-1
+ *   pnpm tsx test/evals/build_preview.ts hello-world-workspace/iteration-1
  */
 
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs'
@@ -433,7 +433,7 @@ ${sections.join('')}
     }
     throw new Error(`Iteration directory not found: ${iterationDir}`)
   }
-  console.error('Usage: pnpm tsx tests/evals/build_preview.ts <iteration-dir>')
+  console.error('Usage: pnpm tsx test/evals/build_preview.ts <iteration-dir>')
   process.exit(1)
 }
 

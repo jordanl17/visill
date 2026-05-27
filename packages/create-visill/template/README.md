@@ -29,7 +29,7 @@ Evals never run in CI. Run them on your machine before pushing.
 
 - `widget-src/` - widget entry, components, styles.
 - `skill-src/` - SKILL.md and any supporting markdown.
-- `tests/` - widget tests and eval fixtures.
+- `test/` - widget tests and eval fixtures.
 
 ## Publish
 

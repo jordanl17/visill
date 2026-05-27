@@ -12,7 +12,7 @@ mkdir -p "$WORKSPACE"
 # Snapshot the current skill so the baseline is reproducible
 cp -R "skill/${SKILL_NAME}" "${SKILL_NAME}-workspace/skill-snapshot-iter-$N"
 # Pre-create the per-scenario output dirs from evals.json
-for id in $(node -p "JSON.parse(require('fs').readFileSync('tests/evals/evals.json','utf8')).evals.map(e=>e.id).join(' ')"); do
+for id in $(node -p "JSON.parse(require('fs').readFileSync('test/evals/evals.json','utf8')).evals.map(e=>e.id).join(' ')"); do
   mkdir -p "$WORKSPACE/eval-$id/with_skill/run-1/outputs"
   mkdir -p "$WORKSPACE/eval-$id/without_skill/run-1/outputs"
 done
@@ -20,7 +20,7 @@ done
 
 ## Spawn all subagents in one turn
 
-For each scenario in `tests/evals/evals.json`, spawn TWO background subagents in the SAME Agent tool call batch (one with_skill, one without_skill). Use `subagent_type: "general-purpose"` and `run_in_background: true`. System notifications fire automatically as each completes.
+For each scenario in `test/evals/evals.json`, spawn TWO background subagents in the SAME Agent tool call batch (one with_skill, one without_skill). Use `subagent_type: "general-purpose"` and `run_in_background: true`. System notifications fire automatically as each completes.
 
 ### with_skill prompt template
 
@@ -63,8 +63,8 @@ Return a one-line summary.
 
 ```bash
 SKILL_NAME=$(node -p "require('./package.json').name.replace(/^(visill|claude-skill)-/, '')")
-pnpm tsx tests/evals/grade.ts "${SKILL_NAME}-workspace/iteration-$N"
-pnpm tsx tests/evals/build_preview.ts "${SKILL_NAME}-workspace/iteration-$N"
+pnpm tsx test/evals/grade.ts "${SKILL_NAME}-workspace/iteration-$N"
+pnpm tsx test/evals/build_preview.ts "${SKILL_NAME}-workspace/iteration-$N"
 open "${SKILL_NAME}-workspace/iteration-$N/eval-preview.html"
 ```
 
