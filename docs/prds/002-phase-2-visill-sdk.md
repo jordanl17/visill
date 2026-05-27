@@ -1,6 +1,6 @@
 # PRD 002 - Phase 2: `visill` SDK package
 
-Status: Proposed. Owner: jordan.lawrence@sanity.io. Date: 2026-05-27.
+Status: Shipped 2026-05-27. Owner: jordan.lawrence@sanity.io. Date: 2026-05-27.
 
 ## 1. Goal
 

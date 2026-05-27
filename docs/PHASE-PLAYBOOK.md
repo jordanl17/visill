@@ -71,11 +71,13 @@ For each task ready to run (no open `blockedBy`):
 
 1. `TaskUpdate status: in_progress`.
 2. Spawn a sub-agent with `subagent_type: general-purpose`. Use `isolation: "worktree"` when the task modifies files in a repo with uncommitted work or when the task is destructive.
-3. Hand the sub-agent the full task description plus its `repo_root`. Tell it explicitly: "do not stage, commit, or push - leave changes unstaged and report a diff."
+3. Hand the sub-agent the full task description plus its `repo_root`. Tell it explicitly: "do not stage, commit, or push - leave changes unstaged and report a diff." For TS, JS, or JSON authoring tasks, repeat the workspace prettier rules in the prompt: `semi: false`, `singleQuote: true`, `trailingComma: "all"`, `printWidth: 100`, `tabWidth: 2`.
 4. Inspect the reported diff when the sub-agent returns. Verify it matches the task's success criteria.
 5. `TaskUpdate status: completed`.
 
 Run parallelizable tasks concurrently by emitting multiple `Agent` tool calls in one message.
+
+**Between every wave and its paired review-diff task**, the coordinator runs `pnpm prettier --write <paths-touched-this-wave>` before dispatching the review. This is non-negotiable: reviews and snapshot-locking tasks must read the formatted form. Skipping it produces snapshot churn or review noise that the next wave's sub-agents cannot resolve.
 
 ### Stage 5: Phase wrap-up
 
@@ -145,7 +147,7 @@ These come from global `CLAUDE.md` and from locked design decisions. Sub-agents 
 - **Sub-agents do not perform git writes.** All `git add`, `git commit`, `git checkout`, `git merge`, `git rebase`, `git push`, branch create/delete, and `gh` calls run from the coordinator's Bash. Sub-agent harnesses often refuse git-write operations as policy violations even when the prompt authorizes them, and you will lose a turn diagnosing it. Delegate file edits, reads, builds, tests, and lints to sub-agents. Keep git in the coordinator.
 - **pnpm only.** Never use npm or yarn directly in any task.
 - **Default branch is `main`.**
-- **Wrap-up commit messages are Conventional Commits titles**, short and terse, describing the implication of the change. Sub-agents do not draft them. The coordinator drafts them at Stage 5 step 5.
+- **Every commit message is a Conventional Commits title and nothing else.** No body, no description, no trailers, no co-author lines. Short, terse, describes the implication of the change. Applies to every commit, not just wrap-up commits. Sub-agents do not draft commit messages. The coordinator drafts them at Stage 5 step 5.
 - **All prose runs through `/writing-clearly-and-concisely` before finalising.** This covers PRDs, ADRs, READMEs, commit messages, PR bodies, phase reports, error messages, and non-trivial code comments. The skill enforces Strunk's terseness rules. Skip it only for shell output, raw logs, code-only edits, and trivial typo fixes.
 - **No em dashes in prose.** Hyphens only.
 - **No negated boolean expressions, no IIFEs, no single-character variable names.**

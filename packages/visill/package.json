@@ -1,22 +1,40 @@
 {
   "name": "visill",
   "version": "0.0.0",
+  "description": "Widget-side runtime SDK for Claude visualize:show_widget skills.",
+  "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "keywords": [
+    "claude",
+    "claude-skill",
+    "widget",
+    "sdk"
+  ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
     "lint": "oxlint .",
-    "test": "echo 'no tests yet' && exit 0",
-    "typecheck": "tsc --noEmit"
+    "pretest": "tsc -p tsconfig.build.json --emitDeclarationOnly",
+    "test": "vitest run"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "jsdom": "^25.0.1",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
   }
 }

@@ -89,9 +89,10 @@ Skip it for: tool-call shell output, raw `git log` excerpts, code-only edits wit
 - Sub-agents never stage or commit. Only the coordinator commits, and only at wrap-up step 4.
 - pnpm only.
 - Default branch is `main`.
-- Autonomous wrap-up commits in this repo use a Conventional Commits title, short and terse, describing the implication of the change. (This overrides the global "use the exact user-provided message" rule for visill phase wrap-up commits only. Sub-agents still draft no commit messages - only the coordinator does, at wrap-up step 4.)
+- **Every commit in this repo is a Conventional Commits title and nothing else.** No body, no description, no trailers, no co-author lines. The title is short and terse and describes the implication of the change. This applies to every commit, not just phase wrap-up commits. (This overrides the global "use the exact user-provided message" rule for visill commits only. Sub-agents still draft no commit messages - only the coordinator does, at wrap-up step 4.)
 - Hyphens only in prose; no em dashes.
 - No negated boolean expressions, no IIFEs, no single-character variable names.
+- **Prettier style is binding.** The workspace `.prettierrc` mandates `semi: false`, `singleQuote: true`, `trailingComma: "all"`, `printWidth: 100`, `tabWidth: 2`. Every sub-agent prompt that authors TS, JS, or JSON MUST repeat this rule verbatim, and the coordinator MUST run `pnpm prettier --write <touched-paths>` after each wave before any review-diff or snapshot-locking task reads the files. Snapshots and downstream prompts then see the formatted form, never the sub-agent's raw output.
 - Functional declarations and higher-order functions over for-loops where reasonable.
 - Code comments: never explain WHAT (well-named identifiers do that). Only explain WHY when non-obvious. No temporal or change-related comments.
 - Evals run locally only, never in CI (see `docs/adrs/0022-evals-local-only.md`).

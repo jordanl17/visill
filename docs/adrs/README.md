@@ -29,7 +29,7 @@ Cross-cutting constraints | 0022+ | as needed
 | 0006 | Gitignore built `skill/` directory | 1 | Pending |
 | 0007 | Description 1024-char cap | 1 | Pending |
 | 0008 | pnpm pin via `packageManager` field | 1 | Pending |
-| 0009 | SDK public API surface | 2 | Pending |
+| 0009 | SDK public API surface | 2 | Accepted |
 | 0010 | `finalizeBundle` HTML rewrites | 3 | Pending |
 | 0011 | Skill-name resolution precedence | 3 | Pending |
 | 0012 | `render.py` JSON-island encoding (`</` neutralisation, `_json` siblings) | 4 | Pending |
