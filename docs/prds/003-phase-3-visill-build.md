@@ -1,6 +1,6 @@
 # PRD 003 - Phase 3: `@visill/build`
 
-Status: Proposed. Owner: jordan.lawrence@sanity.io. Date: 2026-05-27.
+Status: Shipped. Owner: jordan.lawrence@sanity.io. Date: 2026-05-27.
 
 ## 1. Goal
 
@@ -124,3 +124,22 @@ Rationale captured in ADR 0008.
 - `defineVisillConfig` merge semantics for nested Vite options: shallow merge for `build`, concat for `plugins`, override for everything else. Should `build` instead be deep-merged so a consumer can override only `build.terserOptions.compress`? Lean shallow for v0.1, revisit if a consumer hits friction.
 - Should `extras` in `assembleSkill` accept glob patterns, or does the literal `{ from, to }` list suffice for the three known skills? Lean literal for v0.1.
 - Does `resolveSkillName` need an explicit `prefixes` option, or does the hardcoded `['visill-', 'claude-skill-']` list hold until a fourth prefix appears? Lean hardcoded.
+
+## 13. Delivery
+
+- Direct push to `main` at `jordanl17/visill`. Commit `7012a3e` on 2026-05-27. CI green in 25s on the first run.
+- Local commit message: `feat(visill-build): vite plugins that assemble widget skills`.
+- Quality gate at wrap-up: workspace `typecheck` + `lint` + `test` + `build` + `format:check` all clean. 38 tests pass workspace-wide; 18 belong to `@visill/build`.
+- Tarball shape verified by the build-output integration test, not by `pnpm pack`. Phase 7 will gate publish on a `pnpm pack` snapshot.
+- ADRs 0010 and 0011 promoted from Proposed to Accepted in the same commit; canonical index updated.
+- Open questions §12 carry forward to v0.2 if a consumer hits friction: deep-merge `build`, glob `extras`, configurable prefixes. None blocked any Phase 3 work.
+
+## 14. Lessons learned
+
+- **Peer deps that the bundled defaults reference must be declared.** The first build failed because `lightningcss` and `terser` were not on the `@visill/build` peer list, even though `defineVisillConfig` defaults bake them in. Lifted from the source repos' `devDependencies` into both `peerDependencies` and `devDependencies` of `@visill/build`. Future packages that bake in named third-party tooling need the same audit.
+- **Workspace `skill/` gitignore swallowed the golden tree.** The repo-wide `skill/` rule (set in Phase 1 to keep build artefacts out of git) also matched `test/fixtures/hello.golden/skill/`. Added a single negation line. Worth flagging in Phase 6 when migrating repos: each migrating skill carries its own `skill/` in `.gitignore` already, and the fixture pattern is monorepo-only.
+- **Shell `$PATH` carried a stale global `vite` from a prior Node 21 install.** Tests that spawn `vite` via `pnpm exec` or PATH hit the wrong binary. The build and determinism tests resolve `packages/visill-build/node_modules/.bin/vite` explicitly via `import.meta.url`. Consumers of `@visill/build` will not see this because they invoke `vite` via their own package scripts; only the fixture inside this package is affected.
+- **Vitest file parallelism races on shared output dirs.** `build.test.ts` and `determinism.test.ts` both rm-rf the same `skill/hello/` output. Set `fileParallelism: false` in `vitest.config.ts` rather than splitting the fixture - serial execution keeps the two tests cohesive and total runtime is still ~1.3s. Tests that share filesystem state are still allowed; the cost is a few hundred milliseconds, not a redesign.
+- **Vitest defaults are fine.** An earlier draft set `testTimeout: 30000`. The full suite runs in 1.3s. Defaults removed before commit. Rule of thumb: do not raise vitest timeouts above defaults without measuring the actual run.
+- **The simplifier earns its slot.** Three small wins: arrow consts to function declarations, `expect(...).not.toContain(...)` over `expect(...includes(...)).toBe(false)`, deduped `node:path` import. None worth a reviewer's time individually; the pass collected them in one shot.
+- **The reviewer call-out on `assembleSkill` LICENSE path is now PRD §12 territory.** Resolved via `path.resolve(skillSrcDir, '..', 'LICENSE')`; works for every existing repo. A `repoRoot` or `licenseFile` option is the v0.2 fallback if a consumer's tree differs.
