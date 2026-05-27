@@ -30,7 +30,7 @@ The visill monorepo lives at `github.com:jordanl17/visill` (public). The default
 | 4 | Canonical `render.py` + vendored chevron | _(template asset)_ - lives under `packages/create-visill/template/skill-src/scripts/` | no | no |
 | 5 | Test helpers | `@visill/test` only | no | no |
 | 6 | Scaffolder + canonical template + vendored example | `create-visill` + `examples/decision-tree/` | no | no |
-| 7 | **First npm release: RC tarballs** | All 4 packages publish as `0.1.0-rc.0` on `next` tag | **yes - RC release** | no |
+| 7 | **First npm release: RC tarballs** | All 4 packages publish as `0.1.0-rc.0` on `rc` tag | **yes - RC release** | no |
 | 8 | Migration canary: `claude-skill-decision-tree` onto visill | _(consumes published RC; iterate RC.N as gaps surface)_ | iterative `0.1.0-rc.N` bumps as needed | no |
 | 9 | Parallel migrations: `claude-targettable-feedback` + `claude-skill-linear-editing` | _(consume stabilised RC)_ | possibly one more `rc.N` if a gap surfaces | no |
 | 10 | **Stable release: `v0.1.0`** | All 4 packages publish on `latest` tag | **yes - stable v0.1.0** | no |
@@ -41,7 +41,7 @@ The visill monorepo lives at `github.com:jordanl17/visill` (public). The default
 
 **When do we release to npm?**
 
-- **First publish: Phase 7** as `0.1.0-rc.0` under the `next` tag. All 4 packages publish together. Stable consumers see no change because nothing is on `latest` yet.
+- **First publish: Phase 7** as `0.1.0-rc.0` under the `rc` tag. All 4 packages publish together. Stable consumers see no change because nothing is on `latest` yet.
 - **Iterative RC bumps: Phases 8-9.** Each API gap found during migration produces an `0.1.0-rc.N+1`. Migration branches consume the published RC, not the workspace.
 - **Stable release: Phase 10** as `0.1.0` on the `latest` tag. The three migration PRs merge in the same week, or staggered if reviewer fatigue sets in.
 

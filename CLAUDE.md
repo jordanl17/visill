@@ -71,6 +71,30 @@ After the user authorizes delivery, the coordinator enters Stage 6 of `docs/PHAS
 
 Escalation: two failed fix attempts in a row stop the loop and surface to the user.
 
+## Releases
+
+Releases run on Changesets. Four public packages publish: `visill`, `create-visill`, `@visill/build`, `@visill/test`. Private packages under `examples/` get version bumps but never reach npm.
+
+**A release needs a changeset file.** Source-only edits move nothing. To trigger a version bump, drop a markdown file in `.changeset/`:
+
+```
+---
+'visill': minor
+'@visill/build': patch
+---
+
+One sentence on what changed.
+```
+
+`.github/workflows/release.yml` runs on every push to `main`. It opens or updates a "Version Packages" PR that consumes pending changesets, bumps `package.json` versions, and writes `CHANGELOG.md` entries. Merging the PR re-fires `release.yml`, which runs `pnpm release` (`pnpm -r build && changeset publish`) to push each public tarball to npm. The `smoke-publish` job then scaffolds `pnpm create visill@rc` from a tmp dir and verifies the live tarballs end-to-end.
+
+The workspace is in Changesets prerelease mode with tag `rc` (Phase 7, ADR 0019). Versions emerge as `0.1.0-rc.N` and publish to npm dist-tag `rc` (the dist-tag is coupled to the prerelease tag by Changesets and cannot be overridden in pre mode). Phase 10 runs `pnpm changeset pre exit` to flip to stable `0.1.0` on `latest`.
+
+Two repo prerequisites already configured on `jordanl17/visill`:
+
+- `NPM_TOKEN` secret (Granular Access Token scoped to the four packages).
+- Settings → Actions → General → Workflow permissions → "Allow GitHub Actions to create and approve pull requests" enabled. `changesets/action@v1` needs this to open the Version Packages PR.
+
 ## Writing style
 
 When producing prose a human will read - markdown docs, PRDs, ADRs, READMEs, commit messages, PR descriptions, error messages, code comments, phase reports - invoke the `/writing-clearly-and-concisely` skill before finalising. The skill applies Strunk's rules for clear, terse, strong writing. Apply it:

@@ -52,7 +52,7 @@ jobs:
         run: |
           SMOKE_DIR=$(mktemp -d)
           cd "$SMOKE_DIR"
-          pnpm create visill@next hello-rc
+          pnpm create visill@rc hello-rc
           cd hello-rc
           pnpm install
           pnpm build

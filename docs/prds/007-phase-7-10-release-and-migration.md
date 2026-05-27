@@ -8,17 +8,17 @@ Take visill from "monorepo passes its own tests on `main`" to "stable `v0.1.0` p
 
 ## 2. Phase 7 - RC release
 
-**Scope.** Enter Changesets prerelease mode and publish all four packages under the `next` dist-tag.
+**Scope.** Enter Changesets prerelease mode and publish all four packages under the `rc` dist-tag.
 
 **Token gate (precondition).** Before any publish step runs, confirm the `NPM_TOKEN` repo secret exists via `gh secret list --repo jordanl17/visill`. The secret was provisioned on 2026-05-27 (Granular Access Token from npmjs.com scoped to publish on the four packages, or the `@visill` org once created). If `gh secret list` reports it missing at Phase 7 kickoff, abort and ask the user to re-provision; do not proceed. See [ADR 0002](../adrs/0002-monorepo-with-changesets.md). Phase 7 is the first phase that exercises the secret; Phase 0-6 CI is read-only.
 
-- `pnpm changeset pre enter rc`
-- Release-Please / Changesets PR publishes `visill@0.1.0-rc.0`, `create-visill@0.1.0-rc.0`, `@visill/build@0.1.0-rc.0`, `@visill/test@0.1.0-rc.0`, all with `--tag next`.
+- `pnpm changeset pre enter rc`. Changesets couples the npm dist-tag to the prerelease tag in `pre.json`, so the `rc` string flows through to npm and cannot be overridden in pre mode.
+- Release-Please / Changesets PR publishes `visill@0.1.0-rc.0`, `create-visill@0.1.0-rc.0`, `@visill/build@0.1.0-rc.0`, `@visill/test@0.1.0-rc.0`, all on the `rc` tag.
 - `latest` stays empty so nothing on it is picked up accidentally.
 
-**Deliverables.** Four tarballs on npm under `next`. CHANGELOG entries for the rc.0 cut. ADR `0018-rc-via-changesets-prereleases.md` accepted.
+**Deliverables.** Four tarballs on npm under `rc`. CHANGELOG entries for the rc.0 cut. ADR 0019 (RC publish via Changesets prereleases) accepted.
 
-**Success criteria.** `pnpm view visill@next version` returns `0.1.0-rc.0`. A throwaway scaffold (`pnpm create visill@next hello`) builds a green zip end-to-end.
+**Success criteria.** `pnpm view visill@rc version` returns `0.1.0-rc.0`. A throwaway scaffold (`pnpm create visill@rc hello`) builds a green zip end-to-end.
 
 ## 3. Phase 8 - DT canary
 
@@ -73,7 +73,7 @@ CI fails on any single gate. Gate output uploads as a workflow artefact for revi
 2. Author opens an issue on `visill` describing the gap and the consumer use-case.
 3. Author writes a failing test in `@visill/test` (or the relevant package's test suite) on a `main`-targeted branch.
 4. Fix lands on visill `main`, version-bumped via Changeset.
-5. Release-Please publishes `rc.N+1` on the `next` tag.
+5. Release-Please publishes `rc.N+1` on the `rc` tag.
 6. Migration branch bumps to `rc.N+1` (or re-resolves under `link:` for local) and reruns parity gates.
 
 No SDK change ever lands first on a consumer branch.
@@ -95,7 +95,7 @@ The `release.yml` `pnpm/action-setup` pin fix (LE) already shipped in Phase 0 an
 ## 9. Risks + mitigations
 
 - **One of three skills reveals a load-bearing gap late.** Mitigation: DT canary front-loads discovery. If Phase 9 still finds a structural gap, treat it as a new RC iteration; stable waits.
-- **RC version sprawl (`rc.0` through `rc.9`).** Mitigation: acceptable. The `next` tag always points at latest, and consumers track by tag rather than pinned version during dev.
+- **RC version sprawl (`rc.0` through `rc.9`).** Mitigation: acceptable. The `rc` tag always points at latest, and consumers track by tag rather than pinned version during dev.
 - **Reviewer fatigue across three concurrent migration PRs.** Mitigation: each PR carries a parity-gate badge so reviewers can trust the mechanical guarantees and focus on the rewire diff. DT migration sets the review template the other two reuse.
 
 ## 10. Rollback strategy
