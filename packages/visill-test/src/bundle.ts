@@ -59,13 +59,17 @@ export const createBundleTests = (options: BundleTestOptions): void => {
       })
     })
 
-    describe('critical string literals survive JS minification', () => {
-      literals.forEach((literal) => {
-        it(`"${literal}" appears in the bundled output`, () => {
-          expect(bundle).toContain(literal)
+    // Skip declaring the literals suite entirely when none are configured: an empty
+    // describe block fails vitest, and describe.skip would noise over real misconfig.
+    if (literals.length > 0) {
+      describe('critical string literals survive JS minification', () => {
+        literals.forEach((literal) => {
+          it(`"${literal}" appears in the bundled output`, () => {
+            expect(bundle).toContain(literal)
+          })
         })
       })
-    })
+    }
 
     describe('size budget', () => {
       it(`bundle stays under ${sizeLimitKb} KB (${sizeLimitFormatted} bytes)`, () => {
