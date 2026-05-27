@@ -34,7 +34,7 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - name: Build workspace SDK packages
-        run: pnpm -F visill -F @visill/build -F @visill/test -F create-visill build
+        run: pnpm -F @visill/sdk -F @visill/build -F @visill/test -F create-visill build
       - name: Materialise template-dev
         run: node packages/create-visill/scripts/build-template.mjs
       - name: Scaffold hello skill and build it against local packages
@@ -46,7 +46,7 @@ jobs:
           cd hello
           node -e "
             const pkg = require('./package.json');
-            pkg.dependencies.visill = 'file:$GITHUB_WORKSPACE/packages/visill';
+            pkg.dependencies['@visill/sdk'] = 'file:$GITHUB_WORKSPACE/packages/visill';
             pkg.devDependencies['@visill/build'] = 'file:$GITHUB_WORKSPACE/packages/visill-build';
             pkg.devDependencies['@visill/test'] = 'file:$GITHUB_WORKSPACE/packages/visill-test';
             require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2) + '\n');
@@ -78,7 +78,7 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - name: Build workspace SDK packages
-        run: pnpm -F visill -F @visill/build -F @visill/test build
+        run: pnpm -F @visill/sdk -F @visill/build -F @visill/test build
       - name: Build decision-tree example
         run: pnpm --filter=./examples/decision-tree build
       - name: Test decision-tree example

@@ -28,7 +28,7 @@ jobs:
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm -F visill -F @visill/build -F @visill/test -F create-visill build
+      - run: pnpm -F @visill/sdk -F @visill/build -F @visill/test -F create-visill build
       - name: Create release PR or publish
         id: changesets
         uses: changesets/action@v1
