@@ -42,4 +42,22 @@ describe('ownDescendant', () => {
     const result = ownDescendant(root, '.target')
     expect(result).toBeUndefined()
   })
+
+  it('honours a boundary selector for nested non-direct-child targets', () => {
+    document.body.innerHTML = `
+      <div class="unit" id="outer">
+        <div class="wrap">
+          <div class="target" id="outerTarget"></div>
+        </div>
+        <div class="unit" id="inner">
+          <div class="wrap">
+            <div class="target" id="innerTarget"></div>
+          </div>
+        </div>
+      </div>
+    `
+    const outerUnit = document.getElementById('outer') as HTMLDivElement
+    const result = ownDescendant<HTMLDivElement>(outerUnit, '.target', '.unit')
+    expect(result?.id).toBe('outerTarget')
+  })
 })
