@@ -2,6 +2,7 @@ node_modules
 dist
 pnpm-lock.yaml
 coverage
+.changeset/pre.json
 skill/
 *.md
 packages/visill-test/test/fixtures/
