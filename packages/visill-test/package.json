@@ -10,8 +10,12 @@
       "import": "./dist/index.js"
     }
   },
+  "bin": {
+    "visill-structural-html-diff": "./scripts/structural-html-diff.mjs"
+  },
   "files": [
-    "dist"
+    "dist",
+    "scripts"
   ],
   "scripts": {
     "build": "tsup",

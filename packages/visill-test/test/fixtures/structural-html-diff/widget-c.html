@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Widget C</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+      }
+      .widget {
+        padding: 16px;
+        color: #222;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script id="ROOT_DATA" type="application/json">
+      { "title": "Widget C", "items": ["delta"], "count": 1 }
+    </script>
+    <script type="module">
+      const rootElement = document.getElementById('root')
+      const dataElement = document.getElementById('ROOT_DATA')
+      const payload = JSON.parse(dataElement.textContent)
+      const heading = document.createElement('h1')
+      rootElement.appendChild(heading)
+      rootElement.textContent = payload.title
+    </script>
+  </body>
+</html>

@@ -40,8 +40,8 @@ Cross-cutting constraints | 0022+ | as needed
 | 0017 | Vendored example as integration gate | 6 | Accepted |
 | 0018 | Template-shipped lockfile and ignore policy | 6 | Accepted |
 | 0019 | RC publish via Changesets prereleases | 7 | Accepted |
-| 0020 | Migration branch + `pnpm.overrides link:` strategy | 8 | Pending |
-| 0021 | Parity gates for migration PRs | 8 | Pending |
+| 0020 | Migration branch + `pnpm.overrides link:` strategy | 8 | Accepted |
+| 0021 | Parity gates for migration PRs | 8 | Accepted |
 | 0022 | Evals run locally only, never in CI | 6 | Pending |
 | 0023 | tsup for ESM dist emission | 6 | Accepted |
 | 0024 | Tests separated from source | 6.1 | Accepted |
