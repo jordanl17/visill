@@ -1,5 +1,12 @@
 # visill
 
+## 0.1.0-rc.2
+
+### Patch Changes
+
+- 653ae2f: Drop Node 22 support. Require Node 24 or newer.
+- 87a69ee: ownDescendant accepts an optional boundary selector to scope nested same-class containers.
+
 ## 0.1.0-rc.1
 
 ### Minor Changes

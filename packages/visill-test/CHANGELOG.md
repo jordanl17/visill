@@ -1,5 +1,11 @@
 # @visill/test
 
+## 0.1.0-rc.3
+
+### Patch Changes
+
+- 653ae2f: Drop Node 22 support. Require Node 24 or newer.
+
 ## 0.1.0-rc.2
 
 ### Minor Changes

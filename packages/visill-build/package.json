@@ -1,6 +1,6 @@
 {
   "name": "@visill/build",
-  "version": "0.1.0-rc.1",
+  "version": "0.1.0-rc.2",
   "description": "Vite plugins for assembling visill widget skills.",
   "license": "MIT",
   "type": "module",

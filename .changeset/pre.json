@@ -10,6 +10,8 @@
   },
   "changesets": [
     "initial-rc",
+    "node-24-required",
+    "own-descendant-boundary",
     "rename-sdk",
     "structural-html-diff-script",
     "visill-build-initial"
