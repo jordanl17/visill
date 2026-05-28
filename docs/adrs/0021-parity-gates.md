@@ -17,11 +17,19 @@ Each migration branch ships `scripts/parity-check.sh` with the following five ga
 
 1. **Zip file-list and mode bits.** `unzip -Z1` over both zips; `diff` must be empty. `unzip -Z` confirms `render.py` ships with mode `-rwxr-xr-x` in both. Use `unzip -Z`, not `unzip -lv` - the latter omits mode bits on Linux GNU Info-ZIP.
 2. **Per-file byte-equal except `widget-bundled.html`.** `diff -r` between the extracted trees. Only `widget-bundled.html` may differ. Every other file must be byte-identical.
-3. **Structural HTML diff.** `node node_modules/@visill/test/scripts/structural-html-diff.mjs` parses both `widget-bundled.html` files and compares three regions: the first `<script type="module">` body, the inlined `<style>` blob, and the `<script id="..." type="application/json">` skeleton (id plus sorted top-level keys, not values). Whitespace and attribute order are normalised first.
+3. **Structural HTML diff.** `node node_modules/@visill/test/scripts/structural-html-diff.mjs` parses both `widget-bundled.html` files and compares three regions: the first `<script type="module">` body, the inlined `<style>` blob, and the `<script id="..." type="application/json">` skeleton (id plus sorted top-level keys, not values). Whitespace and attribute order are normalised first. On the initial migration PR, the module-script body is excluded from the comparison (see "Migration mode" below); the gate then enforces data-island skeleton equality and style-blob equality only.
 4. **Gzipped bundle size delta within ±5%.** `gzip -c widget-bundled.html | wc -c` on both; `|delta| / max(size_a, size_b) <= 0.05`.
 5. **Eval grading re-run.** `pnpm grade --transcripts tests/evals/transcripts/` re-runs `grade.ts` over checked-in transcripts (no agent re-runs). Assertion outcomes must match 1:1 between branches.
 
 CI fails on any single fail. The script continues through every gate so the report is complete, then exits non-zero if any gate failed. `parity-report.json` uploads as a workflow artefact on every run, pass or fail. `skipped` is a valid per-gate state and does not count as fail (see Deferral below).
+
+## Migration mode: gate 3 excludes the module-script body
+
+The migration PR's defining act is to rewire ad-hoc widget helpers to `@visill/sdk` imports. That rewire necessarily changes the minified `<script type="module">` body even though the runtime behaviour is preserved: inline `requireElement` is replaced by the SDK export, inline data-island reads are replaced by `readDataIsland`, and so on. A strict structural comparison of the module-script body would therefore always fail on the migration PR itself, defeating the gate's purpose of catching unintended drift.
+
+Migration-mode gate 3 strips the `<script type="module">` tag from both `widget-bundled.html` files before invoking the structural diff. The gate then enforces only the two regions that should not change during a migration: the data-island skeleton (id plus top-level JSON keys) and the inlined `<style>` blob. The module-script body is acknowledged as "the part that changes by design".
+
+Post-migration, routine SDK-bump PRs run the gate in its full three-region form. The strip applies only to the migration PR. Each consumer's `parity-check.sh` codifies this distinction at the gate-invocation site: migration-mode pre-processes the input HTML; routine-mode passes it through untouched.
 
 ## Deferral: gate 5 transcripts
 
