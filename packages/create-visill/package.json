@@ -12,7 +12,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=20.11.0"
+    "node": ">=24.0.0"
   },
   "bin": {
     "create-visill": "./dist/index.js"
@@ -32,7 +32,7 @@
     "prepublishOnly": "node scripts/prepublish-guard.mjs"
   },
   "devDependencies": {
-    "@types/node": "^22.10.0",
+    "@types/node": "^24.0.0",
     "tsup": "^8.3.0",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
