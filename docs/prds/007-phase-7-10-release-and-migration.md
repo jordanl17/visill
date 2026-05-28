@@ -1,6 +1,6 @@
 # PRD 007 - Phases 7-10: RC release and migration of the three existing skill repos
 
-Status: Phase 7 Shipped, Phase 8 Shipped, Phases 9-10 Proposed. Owner: jordan.lawrence@sanity.io. Date: 2026-05-27.
+Status: Phase 7 Shipped, Phase 8 Shipped, Phase 9 Shipped, Phase 10 Proposed. Owner: jordan.lawrence@sanity.io. Date: 2026-05-27 (initial), 2026-05-28 (Phase 9 delivery).
 
 ## 1. Combined goal
 
@@ -60,6 +60,26 @@ Shipped via two-repo split: visill `main` carries the parity-gate tooling and AD
 **What serialises them.** If both migrations open SDK gaps on the same export (say, both want a different shape for `readDataIsland`), the smaller of the two pauses until the larger lands its required `rc.N+1`. Expect zero or one such collision; default to parallel.
 
 **Per-repo deliverables.** Identical to Phase 8: `visill-migration` branch, `pnpm.overrides` for local dev, CI installs the published RC, rewire + parity gates, migration PR open.
+
+### Phase 9 - Delivery (2026-05-28)
+
+Shipped via four-repo split: visill `main` carries the SDK gap fix plus the Node 24 ecosystem bump; TF, LE, and DT all carry per-repo commits on their `visill-migration` branches.
+
+- Visill commits on `main`: `87a69ee` (fix sdk: ownDescendant honours arbitrary boundary selectors), `653ae2f` (chore deps: require Node 24 across all packages). Version PR #4 merge at `b66bcb3` published `@visill/sdk@0.1.0-rc.2`, `@visill/build@0.1.0-rc.2`, `@visill/test@0.1.0-rc.3`, `create-visill@0.1.0-rc.2` on `@rc` (manual `npm dist-tag add` for all four per the changesets pre-mode pattern).
+- TF commits on `visill-migration`: `2630c1a` (feat: migrate to visill 0.1.0-rc).
+- LE commits on `visill-migration`: `6d1eb9f` (feat: migrate to visill 0.1.0-rc).
+- DT commits on `visill-migration`: `186d68c` (chore: require Node 24), `9504a9a` (fix ci: parity-check treats render.py as optional).
+- TF migration PR #8 + LE migration PR #3 opened against their respective `main`; DT PR #10 updated with the two follow-up commits. All three OPEN + MERGEABLE; build + parity-check both SUCCESS on each.
+- LE uses canonical `defineVisillConfig({})`; TF uses manual `viteSingleFile + finalizeBundle({ outDir })` composition because TF's skill artefacts live directly under `targetable-feedback/` (no `skill-src/`, no Mustache-rendered SKILL.md).
+- TF retains its bespoke `tests/widget/bundle.test.ts` (no data-island; `createBundleTests` requires `dataScriptId` which TF would have to fake). LE adopts `createBundleTests({...})` cleanly.
+
+### Phase 9 - Lessons learned
+
+1. **ADR 0020 API gap protocol worked exactly as designed.** TF's `.unit > .guidance-wrap > .guidance-input` DOM pattern surfaced a real `ownDescendant` bug: the predicate used the match selector for the `closest(...)` scope check, so any non-direct-child target was unreachable. The architect agent flagged it as Risk 1 in the blueprint; verifying against the SDK source confirmed the gap; protocol kicked in: failing-test-first on `visill` `main`, fix on `main`, rc.2 cut, dist-tag move, consumer branch consumes via floating `"rc"` pin. No SDK change ever landed on a consumer branch. The fix added an optional third `boundary?: string` param defaulting to the match selector for back-compat; the original two-arg call sites (DT) continue to type-check and behave identically.
+2. **`parity-check.sh` gate 1 assumed every consumer ships `render.py`.** TF's hand-edited SKILL.md (no Mustache) hit `[FAIL] render.py missing from one or both zips` even though both zips correctly lacked render.py (parity held). Amended the gate to PASS when `render.py` is missing from BOTH zips and FAIL only when present in one but missing in the other. Propagated to all three consumer copies. ADR 0021 text could be amended in a follow-up to make this explicit, but the script change is self-explanatory.
+3. **Node 24 ecosystem bump driven by Node 22 nearing EOL.** Mid-phase the user directed `engines.node >= 24.0.0` everywhere. 9 in-scope `engines.node` entries (3 visill packages + 2 create-visill template package.jsons + 3 consumer repos + create-visill itself), 7 `@types/node` entries → `^24.0.0`, all 3 consumer workflow `node-version` → `'24'`. Single visill changeset for the four published packages.
+4. **No second iteration of the changesets pre-mode dist-tag bug needed manual intervention beyond Phase 8's pattern.** All four packages required the `npm dist-tag add` ceremony after publish; pre-mode behaviour unchanged from Phase 7/8.
+5. **TF + LE local parity smoke surfaced the gate-1 spec gap pre-push.** Mimicking the CI install recipe end-to-end (strip-overrides, install from registry, build from clean tree, run `parity-check.sh`) caught the render.py issue before any CI fix round was needed. The Phase 8 lesson on "local smoke must mimic CI install recipe" paid off.
 
 ## 5. Phase 10 - stable release
 
