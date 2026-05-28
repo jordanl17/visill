@@ -1,5 +1,11 @@
 # @visill/test
 
+## 0.1.0-rc.2
+
+### Minor Changes
+
+- 21366f0: Add structural-html-diff CLI for byte-tolerant HTML parity comparison in downstream skill repos.
+
 ## 0.1.0-rc.1
 
 ### Patch Changes
