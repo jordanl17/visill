@@ -1,6 +1,6 @@
 # PRD 007 - Phases 7-10: RC release and migration of the three existing skill repos
 
-Status: Proposed. Owner: jordan.lawrence@sanity.io. Date: 2026-05-27.
+Status: Phase 7 Shipped, Phase 8 Shipped, Phases 9-10 Proposed. Owner: jordan.lawrence@sanity.io. Date: 2026-05-27.
 
 ## 1. Combined goal
 
@@ -34,6 +34,24 @@ Take visill from "monorepo passes its own tests on `main`" to "stable `v0.1.0` p
 **Deliverables.** Migrated repo on `visill-migration`. Open migration PR against `claude-skill-decision-tree` `main` with all five parity gates green in CI. ADRs `0019-migration-branch-strategy.md` and `0020-parity-gates.md` accepted.
 
 **Success criteria.** All five parity gates (Section 6) pass on the branch's CI against the latest published RC. PR is review-ready: no draft blockers, no skipped tests.
+
+### Phase 8 - Delivery (2026-05-28)
+
+Shipped via two-repo split: visill `main` carries the parity-gate tooling and ADRs; DT `visill-migration` carries the rewire and CI. DT migration PR #10 open, all four enforced parity gates green plus gate 5 SKIPPED per ADR 0021.
+
+- Visill commits on `main`: `21366f0` (parity-gate cli + ADRs 0020/0021 Accepted), `f55f686` (Version PR #3 merge publishing `@visill/test@0.1.0-rc.2`), `3e17496` (ADR 0021 amendment for gate 3 migration-mode), `68b1d78` (`.changeset/pre.json` added to `.prettierignore` to stop churn).
+- DT commits on `visill-migration`: `32675f3` (migrate to visill 0.1.0-rc), `b5c572c` (strip overrides in build job + pin pnpm version), `1c586b3` (pin @visill deps to `rc` dist-tag + cache pnpm lockfile in subdir), `df3fb8f` (gate 3 strip module-script for migration parity).
+- npm state: `@visill/test@0.1.0-rc.2` on `@rc` and `@latest` (manual `npm dist-tag add` after publish per the changesets pre-mode bug). `@visill/sdk` and `@visill/build` remain at `0.1.0-rc.1` - no SDK API gaps surfaced during DT migration.
+- DT package.json pins all three `@visill/*` deps to `rc` dist-tag string (per ADR 0020 "migration tracks floating @rc"), not explicit versions. CI strips `pnpm.overrides` via `jq 'del(.pnpm)')` and runs `pnpm install --no-frozen-lockfile`.
+
+### Phase 8 - Lessons learned
+
+1. **Gate 3 vs the migration's defining act.** PRD §6 gate 3 compares the `<script type="module">` body for structural equality. But the migration's whole purpose is to rewire helpers, which necessarily changes the minified module-script body even when behaviour is preserved. The two requirements were mutually exclusive for the initial migration PR. Resolution: ADR 0021 amended with a "Migration mode" section; `parity-check.sh` strips the module-script tag from both HTML files before invoking `structural-html-diff.mjs` on migration PRs. Post-migration routine SDK-bump PRs run the gate in its full three-region form. The amendment landed in the same Phase 8 cycle.
+2. **Gate 5 transcripts deferred.** DT has no checked-in `tests/evals/transcripts/`. ADR 0021's "Deferral: gate 5 transcripts" section records the rationale and the exit condition - any consumer that ships transcripts flips its gate 5 from `skipped` to live.
+3. **Changesets pre-mode dist-tag bug recurred.** After Version PR #3 merge, `@visill/test@rc` pointed at `rc.1` (stale), while `@visill/test@latest` advanced to `rc.2`. Required manual `npm dist-tag add @visill/test@0.1.0-rc.2 rc`. Memory captures this pattern from Phase 7.
+4. **Three CI-fix rounds were needed post-push.** Each round fixed a distinct, well-diagnosed layer: (a) the legacy `build` job needed the same strip-overrides recipe as the new `parity-check` job, and `pnpm/action-setup@v4` needed an explicit `version` since the parity-check job's checkouts are in subdirs; (b) `^0.1.0-rc.2` semver pins failed to resolve `@visill/sdk` and `@visill/build` which were still at `rc.1` - switching to `"rc"` dist-tag string fixed it, plus a `cache-dependency-path` for setup-node's pnpm cache; (c) gate 3 strip + the `STRUCTURAL_DIFF_SCRIPT` env-var override + `diff -r` -> `diff -rq` for the gate 2 filter. None of these were caught by the local smoke tests because the smoke tests ran from the DT repo root with overrides intact, not from a CI runner with overrides stripped. Future migrations should add a `pnpm run parity-check:smoke` script that mimics the CI install recipe end-to-end before pushing.
+5. **No SDK API gaps from DT.** The Wave B rewire of `vite.config.ts`, `widget.ts`, and `bundle.test.ts` consumed the `rc.1` surface without a single API gap. `defineVisillConfig({})` covered all DT-specific config knobs; `requireElement` / `readDataIsland` / `readyDOM` / `sendPrompt` replaced every ad-hoc helper; `createBundleTests({...})` subsumed every bundle assertion. This is a strong signal for Phase 9 (TF + LE) - the SDK surface is likely also sufficient there, modulo any TF/LE-specific patterns not present in DT.
+6. **Migration PR stays open through Phase 10.** Per ADR 0020 the DT migration PR (#10) is intentionally not for merge until stable `0.1.0` cuts and the migration branch bumps from `rc` dist-tag to `^0.1.0`. The PR's CI green is the deliverable; merging is Phase 10's act.
 
 ## 4. Phase 9 - TF + LE parallel
 
